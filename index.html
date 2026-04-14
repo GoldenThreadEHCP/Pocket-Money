@@ -1,49 +1,1003 @@
-safe.)
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#FF8C5A">
 <title>Pocket Money</title>
-
-<https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;700;800&display=swap>
-
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-body {
-  margin: 0;
-  font-family: 'Nunito', sans-serif;
-  background: #FFF7F0;
-  color: #2D1F14;
+  :root {
+    --orange: #FF8C5A;
+    --orange-dark: #E8724A;
+    --green: #5DBE8A;
+    --green-dark: #4AAD7A;
+    --red: #FF6B6B;
+    --blue: #5B9EFF;
+    --yellow: #FFD166;
+    --bg: #FFF7F0;
+    --card: #FFFFFF;
+    --text: #2D1F14;
+    --muted: #B8A89A;
+    --border: #F0E4D8;
+    --radius: 24px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bot: env(safe-area-inset-bottom, 0px);
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+height: 100%;
+font-family: ‘Nunito’, sans-serif;
+background: var(–bg);
+color: var(–text);
+overflow: hidden;
 }
 
 #app {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 20px;
+height: 100%;
+display: flex;
+flex-direction: column;
+max-width: 480px;
+margin: 0 auto;
+position: relative;
+overflow: hidden;
 }
 
+/* SCREENS */
+.screen {
+position: absolute;
+inset: 0;
+display: flex;
+flex-direction: column;
+opacity: 0;
+pointer-events: none;
+transform: translateX(30px);
+transition: opacity 0.25s ease, transform 0.25s ease;
+overflow: hidden;
+}
+.screen.active {
+opacity: 1;
+pointer-events: all;
+transform: translateX(0);
+}
+.screen.slide-left {
+transform: translateX(-30px);
+}
+
+.scroll-body {
+flex: 1;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
+padding-bottom: calc(20px + var(–safe-bot));
+}
+
+/* TOPBAR */
+.topbar {
+padding: calc(var(–safe-top) + 16px) 20px 16px;
+background: var(–bg);
+display: flex;
+align-items: center;
+gap: 12px;
+flex-shrink: 0;
+position: relative;
+z-index: 10;
+}
+.topbar-title {
+font-family: ‘Baloo 2’, sans-serif;
+font-size: 22px;
+font-weight: 800;
+color: var(–text);
+flex: 1;
+}
+.topbar-sub {
+font-size: 12px;
+font-weight: 700;
+color: var(–muted);
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+.back-btn {
+width: 40px; height: 40px;
+background: var(–card);
+border: 2px solid var(–border);
+border-radius: 14px;
+cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+font-size: 18px;
+flex-shrink: 0;
+transition: all 0.15s;
+}
+.back-btn:active { transform: scale(0.92); background: var(–border); }
+
+/* CARDS */
 .card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-  text-align: center;
+background: var(–card);
+border-radius: var(–radius);
+padding: 20px;
+box-shadow: 0 2px 16px rgba(0,0,0,0.06);
 }
 
-h1 {
-  font-family: 'Baloo 2', cursive;
+/* BUTTONS */
+.btn {
+border: none; cursor: pointer;
+border-radius: 18px;
+font-family: ‘Nunito’, sans-serif;
+font-weight: 800;
+font-size: 16px;
+padding: 15px 24px;
+transition: all 0.15s;
+display: flex; align-items: center; justify-content: center; gap: 8px;
 }
+.btn:active { transform: scale(0.95); }
+.btn-primary { background: var(–orange); color: white; box-shadow: 0 4px 14px rgba(255,140,90,0.4); }
+.btn-green { background: var(–green); color: white; box-shadow: 0 4px 14px rgba(93,190,138,0.4); }
+.btn-red { background: var(–red); color: white; box-shadow: 0 4px 14px rgba(255,107,107,0.4); }
+.btn-ghost { background: var(–card); color: var(–muted); border: 2px solid var(–border); }
+.btn-full { width: 100%; }
+.btn-sm { padding: 10px 18px; font-size: 14px; border-radius: 14px; }
+
+/* INPUT */
+.input-group { margin-bottom: 16px; }
+.input-label { font-size: 12px; font-weight: 800; color: var(–muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+.input {
+width: 100%; border: 2.5px solid var(–border);
+border-radius: 16px; padding: 14px 18px;
+font-size: 18px; font-family: ‘Nunito’, sans-serif; font-weight: 800;
+background: var(–card); outline: none; color: var(–text);
+transition: border 0.2s, box-shadow 0.2s;
+}
+.input:focus { border-color: var(–orange); box-shadow: 0 0 0 4px rgba(255,140,90,0.12); }
+.input.amount-input { font-size: 32px; text-align: center; letter-spacing: -1px; }
+
+/* CHIPS */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+display: inline-flex; align-items: center; gap: 6px;
+background: var(–card); border: 2px solid var(–border);
+border-radius: 50px; padding: 8px 14px;
+font-size: 13px; font-weight: 800; cursor: pointer;
+transition: all 0.15s; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.chip:active { transform: scale(0.95); }
+.chip.green { border-color: #C0EDD5; background: #F0FBF5; color: var(–green-dark); }
+.chip.red { border-color: #FFD0D0; background: #FFF5F5; color: #E05050; }
+
+/* TOAST */
+#toast {
+position: fixed; bottom: calc(20px + var(–safe-bot)); left: 50%;
+transform: translateX(-50%) translateY(80px);
+background: #2D1F14; color: white;
+padding: 12px 22px; border-radius: 50px;
+font-weight: 800; font-size: 14px;
+z-index: 1000; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+white-space: nowrap; pointer-events: none;
+box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+#toast.error { background: var(–red); }
+
+/* ======== SCREEN: USERS ======== */
+#screen-users .scroll-body { padding: 0 20px 20px; }
+
+.users-header {
+padding: 0 20px 20px;
+}
+.app-logo {
+display: flex; align-items: center; gap: 12px;
+padding: calc(var(–safe-top) + 20px) 20px 20px;
+}
+.app-logo-icon {
+width: 52px; height: 52px;
+background: linear-gradient(135deg, var(–orange), #FF6B8A);
+border-radius: 18px;
+display: flex; align-items: center; justify-content: center;
+font-size: 26px;
+box-shadow: 0 4px 16px rgba(255,140,90,0.4);
+}
+.app-logo-text { font-family: ‘Baloo 2’, sans-serif; font-size: 26px; font-weight: 800; color: var(–text); line-height: 1; }
+.app-logo-sub { font-size: 13px; color: var(–muted); font-weight: 600; }
+
+.user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.user-card {
+background: var(–card);
+border-radius: 22px;
+padding: 20px 16px;
+display: flex; flex-direction: column; align-items: center; gap: 10px;
+box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+cursor: pointer;
+transition: all 0.2s;
+position: relative;
+border: 2.5px solid transparent;
+}
+.user-card:active { transform: scale(0.96); }
+.user-card .avatar { font-size: 52px; line-height: 1; }
+.user-card .user-name { font-weight: 800; font-size: 15px; color: var(–text); text-align: center; }
+.user-card .user-balance { font-family: ‘Baloo 2’, sans-serif; font-weight: 700; font-size: 20px; }
+.user-card.color-0 { background: linear-gradient(145deg, #FFF5F0, #FFF0E8); border-color: #FFE0D0; }
+.user-card.color-0 .user-balance { color: var(–orange); }
+.user-card.color-1 { background: linear-gradient(145deg, #F0FAF5, #E8F8F0); border-color: #C8EDD8; }
+.user-card.color-1 .user-balance { color: var(–green-dark); }
+.user-card.color-2 { background: linear-gradient(145deg, #F0F6FF, #EAF0FF); border-color: #C8D8FF; }
+.user-card.color-2 .user-balance { color: var(–blue); }
+.user-card.color-3 { background: linear-gradient(145deg, #FFFBF0, #FFF7E0); border-color: #FFE8A0; }
+.user-card.color-3 .user-balance { color: #C8900A; }
+.user-card.color-4 { background: linear-gradient(145deg, #FFF0F5, #FFE8F2); border-color: #FFD0E5; }
+.user-card.color-4 .user-balance { color: #C8406A; }
+.user-card.color-5 { background: linear-gradient(145deg, #F5F0FF, #EDE8FF); border-color: #D8C8FF; }
+.user-card.color-5 .user-balance { color: #7048E8; }
+
+.add-user-card {
+background: var(–card);
+border-radius: 22px;
+padding: 20px 16px;
+display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+box-shadow: 0 2px 14px rgba(0,0,0,0.04);
+cursor: pointer;
+transition: all 0.2s;
+border: 2.5px dashed var(–border);
+min-height: 160px;
+}
+.add-user-card:active { transform: scale(0.96); background: #FFF0E8; border-color: var(–orange); }
+.add-user-card .plus { font-size: 36px; color: var(–muted); }
+.add-user-card span { font-weight: 800; color: var(–muted); font-size: 14px; }
+
+.edit-btn {
+position: absolute; top: 10px; right: 10px;
+width: 28px; height: 28px;
+background: rgba(0,0,0,0.06); border-radius: 8px;
+display: flex; align-items: center; justify-content: center;
+font-size: 13px; cursor: pointer; opacity: 0;
+transition: opacity 0.2s;
+}
+.user-card:hover .edit-btn { opacity: 1; }
+
+/* ======== SCREEN: DASHBOARD ======== */
+#screen-dash .scroll-body { padding: 0 20px; }
+
+.balance-card {
+border-radius: 28px;
+padding: 28px 24px;
+text-align: center;
+position: relative;
+overflow: hidden;
+margin-bottom: 18px;
+}
+.balance-card::before {
+content: ‘’; position: absolute;
+top: -40px; right: -40px;
+width: 140px; height: 140px;
+background: rgba(255,255,255,0.12);
+border-radius: 50%;
+}
+.balance-card::after {
+content: ‘’; position: absolute;
+bottom: -50px; left: -20px;
+width: 120px; height: 120px;
+background: rgba(255,255,255,0.08);
+border-radius: 50%;
+}
+.balance-avatar { font-size: 60px; display: block; margin-bottom: 4px; cursor: pointer; transition: transform 0.15s; position: relative; z-index: 1; }
+.balance-avatar:active { transform: scale(1.15) rotate(10deg); }
+.balance-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 1.5px; text-transform: uppercase; position: relative; z-index: 1; }
+.balance-amount { font-family: ‘Baloo 2’, sans-serif; font-size: 58px; font-weight: 800; color: white; line-height: 1.1; position: relative; z-index: 1; }
+.balance-sub { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.65); margin-top: 4px; position: relative; z-index: 1; }
+
+.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.action-btn {
+border-radius: 20px; padding: 18px 12px;
+display: flex; flex-direction: column; align-items: center; gap: 6px;
+cursor: pointer; border: none; font-family: ‘Nunito’, sans-serif;
+font-weight: 800; font-size: 15px; transition: all 0.15s;
+}
+.action-btn:active { transform: scale(0.95); }
+.action-btn .action-icon { font-size: 28px; }
+.action-btn.add { background: var(–green); color: white; box-shadow: 0 4px 14px rgba(93,190,138,0.35); }
+.action-btn.spend { background: var(–orange); color: white; box-shadow: 0 4px 14px rgba(255,140,90,0.35); }
+
+.section-head {
+display: flex; justify-content: space-between; align-items: center;
+margin-bottom: 12px;
+}
+.section-title { font-weight: 900; font-size: 16px; color: var(–text); }
+.see-all { font-size: 13px; font-weight: 700; color: var(–orange); cursor: pointer; }
+
+.tx-list { display: flex; flex-direction: column; gap: 2px; }
+.tx-row {
+display: flex; align-items: center; gap: 12px;
+padding: 12px 0; border-bottom: 1px solid var(–border);
+}
+.tx-row:last-child { border-bottom: none; }
+.tx-icon {
+width: 40px; height: 40px; border-radius: 14px;
+display: flex; align-items: center; justify-content: center;
+font-size: 19px; flex-shrink: 0;
+}
+.tx-icon.add { background: #E8F8EE; }
+.tx-icon.spend { background: #FEF0EC; }
+.tx-info { flex: 1; min-width: 0; }
+.tx-desc { font-weight: 800; font-size: 14px; color: var(–text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tx-date { font-size: 12px; color: var(–muted); font-weight: 600; margin-top: 1px; }
+.tx-amount { font-family: ‘Baloo 2’, sans-serif; font-weight: 700; font-size: 17px; }
+.tx-amount.add { color: var(–green-dark); }
+.tx-amount.spend { color: #E05C3A; }
+.tx-del { background: none; border: none; font-size: 16px; color: #DDD; cursor: pointer; padding: 4px; flex-shrink: 0; }
+.tx-del:active { color: var(–red); }
+
+.empty-state { text-align: center; padding: 40px 20px; }
+.empty-state .empty-icon { font-size: 52px; margin-bottom: 12px; }
+.empty-state p { font-weight: 700; color: var(–muted); font-size: 15px; }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.stat-card { border-radius: 18px; padding: 16px; text-align: center; }
+.stat-card.earned { background: #E8F8EE; }
+.stat-card.spent { background: #FEF0EC; }
+.stat-val { font-family: ‘Baloo 2’, sans-serif; font-size: 22px; font-weight: 800; }
+.stat-card.earned .stat-val { color: var(–green-dark); }
+.stat-card.spent .stat-val { color: #E05C3A; }
+.stat-lbl { font-size: 12px; font-weight: 700; }
+.stat-card.earned .stat-lbl { color: var(–green); }
+.stat-card.spent .stat-lbl { color: #F08060; }
+
+/* ======== SCREEN: ADD/SPEND ======== */
+#screen-add .scroll-body,
+#screen-spend .scroll-body { padding: 0 20px; }
+
+/* ======== SCREEN: HISTORY ======== */
+#screen-history .scroll-body { padding: 0 20px; }
+
+/* ======== SCREEN: NEW USER / EDIT USER ======== */
+#screen-newuser .scroll-body,
+#screen-edituser .scroll-body { padding: 0 20px; }
+
+.avatar-grid {
+display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;
+margin-top: 8px;
+}
+.avatar-opt {
+aspect-ratio: 1; border-radius: 14px;
+display: flex; align-items: center; justify-content: center;
+font-size: 26px; cursor: pointer;
+background: var(–bg); border: 2.5px solid transparent;
+transition: all 0.15s;
+}
+.avatar-opt:active { transform: scale(0.9); }
+.avatar-opt.selected { border-color: var(–orange); background: #FFF5F0; box-shadow: 0 0 0 3px rgba(255,140,90,0.2); }
+
+.color-opts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.color-opt {
+width: 36px; height: 36px; border-radius: 50%;
+cursor: pointer; border: 3px solid transparent;
+transition: all 0.15s; box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.color-opt.selected { border-color: var(–text); transform: scale(1.15); }
+
+.user-preview {
+display: flex; align-items: center; gap: 16px;
+padding: 16px; background: var(–bg); border-radius: 18px; margin-bottom: 20px;
+}
+.user-preview .prev-avatar { font-size: 44px; }
+.user-preview .prev-name { font-weight: 900; font-size: 18px; color: var(–text); }
+.user-preview .prev-bal { font-family: ‘Baloo 2’, sans-serif; font-size: 16px; font-weight: 700; color: var(–muted); }
 </style>
-</head>
 
+</head>
 <body>
 <div id="app">
-  <div class="card">
-    <h1>🐷 Pocket Money</h1>
-    <p>App loaded successfully ✅</p>
-    <p>If you can see this, Netlify will work.</p>
+  <div id="toast"></div>
+
+  <!-- ===== SCREEN: USERS ===== -->
+
+  <div class="screen active" id="screen-users">
+    <div class="app-logo">
+      <div class="app-logo-icon">🐷</div>
+      <div>
+        <div class="app-logo-text">Pocket Money</div>
+        <div class="app-logo-sub">Who's saving today?</div>
+      </div>
+    </div>
+    <div class="scroll-body" style="padding:0 20px 20px;">
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: DASHBOARD ===== -->
+
+  <div class="screen" id="screen-dash">
+    <div class="topbar">
+      <button class="back-btn" onclick="goScreen('users')">←</button>
+      <div>
+        <div class="topbar-sub">Savings</div>
+        <div class="topbar-title" id="dash-name">—</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="goEditUser()" style="margin-left:auto;">✏️ Edit</button>
+    </div>
+    <div class="scroll-body" id="dash-scroll">
+      <div id="balance-card" class="balance-card" style="margin:0 20px 18px;">
+        <span class="balance-avatar" id="dash-avatar" onclick="bouncePig()">🐷</span>
+        <div class="balance-label">Balance</div>
+        <div class="balance-amount" id="dash-balance">£0.00</div>
+        <div class="balance-sub" id="dash-mood">Start saving! 💪</div>
+      </div>
+      <div class="action-row" style="margin:0 20px 18px;">
+        <button class="action-btn add" onclick="goScreen('add')">
+          <span class="action-icon">💰</span>Add Money
+        </button>
+        <button class="action-btn spend" onclick="goScreen('spend')">
+          <span class="action-icon">🛍️</span>Spend
+        </button>
+      </div>
+      <div style="padding:0 20px;">
+        <div class="stats-row" id="dash-stats"></div>
+        <div class="card">
+          <div class="section-head">
+            <div class="section-title">Recent</div>
+            <div class="see-all" id="see-all-btn" onclick="goScreen('history')" style="display:none;">See all →</div>
+          </div>
+          <div class="tx-list" id="dash-tx"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: ADD MONEY ===== -->
+
+  <div class="screen" id="screen-add">
+    <div class="topbar">
+      <button class="back-btn" onclick="goScreen('dash')">←</button>
+      <div>
+        <div class="topbar-sub">Adding to</div>
+        <div class="topbar-title" id="add-name">—</div>
+      </div>
+    </div>
+    <div class="scroll-body" style="padding:0 20px;">
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">Amount</label>
+        <input class="input amount-input" id="add-amount" type="number" min="0" step="0.01" placeholder="£0.00" inputmode="decimal">
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">What for?</label>
+        <input class="input" id="add-label" type="text" placeholder="e.g. Birthday money">
+      </div>
+      <div style="margin-bottom:20px;">
+        <div class="input-label">Quick Add</div>
+        <div class="chips" id="earn-chips"></div>
+      </div>
+      <button class="btn btn-green btn-full" id="add-confirm-btn" onclick="confirmAdd()">Add Money ✓</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: SPEND ===== -->
+
+  <div class="screen" id="screen-spend">
+    <div class="topbar">
+      <button class="back-btn" onclick="goScreen('dash')">←</button>
+      <div>
+        <div class="topbar-sub">Spending from</div>
+        <div class="topbar-title" id="spend-name">—</div>
+      </div>
+    </div>
+    <div class="scroll-body" style="padding:0 20px;">
+      <div style="text-align:center; margin-bottom:16px;">
+        <span style="font-size:13px; font-weight:700; color:var(--muted);">Balance: </span>
+        <span style="font-family:'Baloo 2'; font-size:16px; font-weight:700; color:var(--orange);" id="spend-bal-display">£0.00</span>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">Amount</label>
+        <input class="input amount-input" id="spend-amount" type="number" min="0" step="0.01" placeholder="£0.00" inputmode="decimal">
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">What did you buy?</label>
+        <input class="input" id="spend-label" type="text" placeholder="e.g. Sweets">
+      </div>
+      <div style="margin-bottom:20px;">
+        <div class="input-label">Quick Spend</div>
+        <div class="chips" id="spend-chips"></div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="confirmSpend()">Spend ✓</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: HISTORY ===== -->
+
+  <div class="screen" id="screen-history">
+    <div class="topbar">
+      <button class="back-btn" onclick="goScreen('dash')">←</button>
+      <div>
+        <div class="topbar-sub" id="hist-sub">History</div>
+        <div class="topbar-title" id="hist-name">—</div>
+      </div>
+    </div>
+    <div class="scroll-body" style="padding:0 20px;">
+      <div class="card" id="hist-list"></div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: NEW USER ===== -->
+
+  <div class="screen" id="screen-newuser">
+    <div class="topbar">
+      <button class="back-btn" onclick="goScreen('users')">←</button>
+      <div>
+        <div class="topbar-sub">Add</div>
+        <div class="topbar-title">New Person</div>
+      </div>
+    </div>
+    <div class="scroll-body" style="padding:0 20px;">
+      <div class="user-preview">
+        <div class="prev-avatar" id="new-prev-avatar">🐷</div>
+        <div>
+          <div class="prev-name" id="new-prev-name">Name</div>
+          <div class="prev-bal">£0.00 balance</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">Name</label>
+        <input class="input" id="new-name" type="text" placeholder="e.g. Emma" oninput="updateNewPreview()">
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">Choose Avatar</label>
+        <div class="avatar-grid" id="new-avatar-grid"></div>
+      </div>
+      <div class="card" style="margin-bottom:20px;">
+        <label class="input-label">Card Colour</label>
+        <div class="color-opts" id="new-color-opts"></div>
+      </div>
+      <button class="btn btn-green btn-full" onclick="createUser()">Create ✓</button>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN: EDIT USER ===== -->
+
+  <div class="screen" id="screen-edituser">
+    <div class="topbar">
+      <button class="back-btn" onclick="goScreen('dash')">←</button>
+      <div>
+        <div class="topbar-sub">Editing</div>
+        <div class="topbar-title" id="edit-title">Person</div>
+      </div>
+    </div>
+    <div class="scroll-body" style="padding:0 20px;">
+      <div class="user-preview">
+        <div class="prev-avatar" id="edit-prev-avatar">🐷</div>
+        <div>
+          <div class="prev-name" id="edit-prev-name">Name</div>
+          <div class="prev-bal" id="edit-prev-bal">£0.00 balance</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">Name</label>
+        <input class="input" id="edit-name" type="text" oninput="updateEditPreview()">
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">Choose Avatar</label>
+        <div class="avatar-grid" id="edit-avatar-grid"></div>
+      </div>
+      <div class="card" style="margin-bottom:14px;">
+        <label class="input-label">Card Colour</label>
+        <div class="color-opts" id="edit-color-opts"></div>
+      </div>
+      <button class="btn btn-green btn-full" style="margin-bottom:14px;" onclick="saveEditUser()">Save Changes ✓</button>
+      <button class="btn btn-ghost btn-full" style="color:#E05050;border-color:#FFD0D0;" onclick="deleteUser()">🗑 Remove Person</button>
+    </div>
   </div>
 </div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const AVATARS = ['🐷','🐻','🐼','🦊','🐨','🐯','🦁','🐸','🐧','🦋','🦄','🐶','🐱','🐭','🐹','🐰','🐮','🐔','🐺','🦝','🦙','🐤','🦔','🐲'];
+const COLORS = [
+  { id: 0, bg: ['#FF8C5A', '#E8724A'], label: 'Coral' },
+  { id: 1, bg: ['#5DBE8A', '#4AAD7A'], label: 'Mint' },
+  { id: 2, bg: ['#5B9EFF', '#4A8AEE'], label: 'Sky' },
+  { id: 3, bg: ['#FFD166', '#EAB830'], label: 'Sun' },
+  { id: 4, bg: ['#FF8BB5', '#EE6A9A'], label: 'Rose' },
+  { id: 5, bg: ['#A07AEE', '#8A5ADC'], label: 'Purple' },
+];
+
+const EARN_SUGGESTIONS = [
+  { label: '🧹 Chores', amount: 2 },
+  { label: '⭐ Good Work', amount: 5 },
+  { label: '🎂 Birthday', amount: 10 },
+  { label: '🎁 Gift', amount: 20 },
+  { label: '🚗 Car Wash', amount: 3 },
+  { label: '📚 Reading', amount: 1 },
+];
+const SPEND_SUGGESTIONS = [
+  { label: '🍬 Sweets', amount: 0.5 },
+  { label: '📚 Book', amount: 3 },
+  { label: '🎮 Game', amount: 5 },
+  { label: '🧸 Toy', amount: 8 },
+  { label: '🎪 Day Out', amount: 10 },
+  { label: '🍕 Treat', amount: 4 },
+];
+
+let db = JSON.parse(localStorage.getItem('pocketmoney_v2') || '{"users":[]}');
+let currentUser = null;
+let currentScreen = 'users';
+
+// new user state
+let newAvatarSel = '🐷', newColorSel = 0;
+let editAvatarSel = '🐷', editColorSel = 0;
+
+function save() { localStorage.setItem('pocketmoney_v2', JSON.stringify(db)); }
+function fmt(n) { return '£' + Math.abs(n).toFixed(2); }
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+// ============================================================
+// SCREENS
+// ============================================================
+function goScreen(name) {
+  const leaving = document.getElementById('screen-' + currentScreen);
+  const entering = document.getElementById('screen-' + name);
+  if (!entering || name === currentScreen) return;
+
+  const goingBack = ['users', 'dash'].includes(name);
+  leaving.classList.remove('active');
+  leaving.classList.add(goingBack ? '' : 'slide-left');
+  setTimeout(() => leaving.classList.remove('slide-left'), 300);
+
+  entering.style.transform = goingBack ? 'translateX(-30px)' : 'translateX(30px)';
+  entering.style.opacity = '0';
+  entering.classList.add('active');
+  entering.style.transition = 'none';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      entering.style.transition = '';
+      entering.style.transform = '';
+      entering.style.opacity = '';
+    });
+  });
+  currentScreen = name;
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer;
+function toast(msg, err = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = err ? 'error show' : 'show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// USERS SCREEN
+// ============================================================
+function renderUsers() {
+  const grid = document.getElementById('user-grid');
+  grid.innerHTML = '';
+  db.users.forEach((u, i) => {
+    const total = u.transactions ? u.transactions.length : 0;
+    const div = document.createElement('div');
+    div.className = `user-card color-${u.color ?? i % 6}`;
+    div.innerHTML = `
+      <div class="edit-btn" onclick="event.stopPropagation(); openEditFromUsers(${i})">✏️</div>
+      <div class="avatar">${u.avatar || '🐷'}</div>
+      <div class="user-name">${u.name}</div>
+      <div class="user-balance">${fmt(u.balance || 0)}</div>
+    `;
+    div.addEventListener('click', () => openUser(i));
+    grid.appendChild(div);
+  });
+  // Add button
+  const add = document.createElement('div');
+  add.className = 'add-user-card';
+  add.innerHTML = `<div class="plus">＋</div><span>Add Person</span>`;
+  add.onclick = () => openNewUser();
+  grid.appendChild(add);
+}
+
+// ============================================================
+// OPEN USER / DASHBOARD
+// ============================================================
+function openUser(idx) {
+  currentUser = idx;
+  renderDash();
+  goScreen('dash');
+}
+
+function renderDash() {
+  const u = db.users[currentUser];
+  if (!u) return;
+  document.getElementById('dash-name').textContent = u.name;
+  document.getElementById('add-name').textContent = u.name;
+  document.getElementById('spend-name').textContent = u.name;
+  document.getElementById('hist-name').textContent = u.name;
+
+  const avatar = document.getElementById('dash-avatar');
+  avatar.textContent = u.avatar || '🐷';
+
+  const bal = u.balance || 0;
+  document.getElementById('dash-balance').textContent = fmt(bal);
+  document.getElementById('spend-bal-display').textContent = fmt(bal);
+
+  // mood
+  let mood = 'Start saving! 💪';
+  if (bal >= 50) mood = 'Amazing savings! 🌟';
+  else if (bal >= 20) mood = 'Great job saving! ⭐';
+  else if (bal >= 5) mood = 'Keep going! 😊';
+  else if (bal > 0) mood = 'You\'ve started! 🌱';
+  document.getElementById('dash-mood').textContent = mood;
+
+  // balance card gradient
+  const c = COLORS[u.color ?? 0];
+  document.getElementById('balance-card').style.background = `linear-gradient(135deg, ${c.bg[0]}, ${c.bg[1]})`;
+
+  // stats
+  const earned = (u.transactions || []).filter(t => t.type === 'add').reduce((a, t) => a + t.amount, 0);
+  const spent = (u.transactions || []).filter(t => t.type === 'spend').reduce((a, t) => a + t.amount, 0);
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="stat-card earned"><div class="stat-val">${fmt(earned)}</div><div class="stat-lbl">Total Earned</div></div>
+    <div class="stat-card spent"><div class="stat-val">${fmt(spent)}</div><div class="stat-lbl">Total Spent</div></div>
+  `;
+
+  // recent tx
+  const txs = (u.transactions || []).slice(0, 5);
+  const container = document.getElementById('dash-tx');
+  const seeAll = document.getElementById('see-all-btn');
+  if (txs.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🪙</div><p>No transactions yet!</p></div>`;
+    seeAll.style.display = 'none';
+  } else {
+    seeAll.style.display = (u.transactions || []).length > 5 ? 'block' : 'none';
+    container.innerHTML = txs.map(tx => txRow(tx)).join('');
+  }
+}
+
+function txRow(tx) {
+  return `<div class="tx-row">
+    <div class="tx-icon ${tx.type}">${tx.type === 'add' ? '💰' : '🛍️'}</div>
+    <div class="tx-info">
+      <div class="tx-desc">${tx.label}</div>
+      <div class="tx-date">${fmtDate(tx.date)}</div>
+    </div>
+    <div class="tx-amount ${tx.type}">${tx.type === 'add' ? '+' : '-'}${fmt(tx.amount)}</div>
+    <button class="tx-del" onclick="deleteTx(${tx.id})" title="Remove">✕</button>
+  </div>`;
+}
+
+function bouncePig() {
+  const el = document.getElementById('dash-avatar');
+  el.style.animation = 'none';
+  el.style.transition = 'none';
+  el.offsetHeight;
+  el.style.animation = 'bouncePig 0.5s ease';
+  setTimeout(() => el.style.animation = '', 500);
+}
+
+// ============================================================
+// ADD / SPEND
+// ============================================================
+function buildChips() {
+  document.getElementById('earn-chips').innerHTML = EARN_SUGGESTIONS.map(s =>
+    `<div class="chip green" onclick="quickAdd(${s.amount},'${s.label}')">${s.label} <b>+${fmt(s.amount)}</b></div>`
+  ).join('');
+  document.getElementById('spend-chips').innerHTML = SPEND_SUGGESTIONS.map(s =>
+    `<div class="chip red" onclick="quickSpend(${s.amount},'${s.label}')">${s.label} <b>${fmt(s.amount)}</b></div>`
+  ).join('');
+}
+
+function quickAdd(amt, lbl) {
+  document.getElementById('add-amount').value = amt;
+  document.getElementById('add-label').value = lbl;
+}
+function quickSpend(amt, lbl) {
+  document.getElementById('spend-amount').value = amt;
+  document.getElementById('spend-label').value = lbl;
+}
+
+function confirmAdd() {
+  const amt = parseFloat(document.getElementById('add-amount').value);
+  const lbl = document.getElementById('add-label').value.trim() || 'Added money';
+  if (!amt || amt <= 0) { toast('Enter a valid amount', true); return; }
+  const u = db.users[currentUser];
+  if (!u.transactions) u.transactions = [];
+  u.balance = (u.balance || 0) + amt;
+  u.transactions.unshift({ id: Date.now(), type: 'add', amount: amt, label: lbl, date: new Date().toISOString() });
+  save();
+  toast(`+${fmt(amt)} added! 🎉`);
+  document.getElementById('add-amount').value = '';
+  document.getElementById('add-label').value = '';
+  renderDash();
+  goScreen('dash');
+}
+
+function confirmSpend() {
+  const amt = parseFloat(document.getElementById('spend-amount').value);
+  const lbl = document.getElementById('spend-label').value.trim() || 'Spent money';
+  if (!amt || amt <= 0) { toast('Enter a valid amount', true); return; }
+  const u = db.users[currentUser];
+  if (amt > (u.balance || 0)) { toast('Not enough money! 😢', true); return; }
+  if (!u.transactions) u.transactions = [];
+  u.balance = (u.balance || 0) - amt;
+  u.transactions.unshift({ id: Date.now(), type: 'spend', amount: amt, label: lbl, date: new Date().toISOString() });
+  save();
+  toast(`-${fmt(amt)} spent 🛍️`);
+  document.getElementById('spend-amount').value = '';
+  document.getElementById('spend-label').value = '';
+  renderDash();
+  goScreen('dash');
+}
+
+function deleteTx(id) {
+  const u = db.users[currentUser];
+  const tx = u.transactions.find(t => t.id === id);
+  if (!tx) return;
+  u.balance = (u.balance || 0) + (tx.type === 'add' ? -tx.amount : tx.amount);
+  u.transactions = u.transactions.filter(t => t.id !== id);
+  save(); renderDash(); renderHistory();
+  toast('Removed');
+}
+
+// ============================================================
+// HISTORY
+// ============================================================
+function renderHistory() {
+  const u = db.users[currentUser];
+  if (!u) return;
+  const txs = u.transactions || [];
+  document.getElementById('hist-sub').textContent = `${txs.length} transaction${txs.length !== 1 ? 's' : ''}`;
+  const el = document.getElementById('hist-list');
+  if (txs.length === 0) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>No transactions</p></div>`;
+  } else {
+    el.innerHTML = txs.map(tx => txRow(tx)).join('');
+  }
+}
+
+// override goScreen for history
+const _goScreen = goScreen;
+
+// ============================================================
+// NEW USER
+// ============================================================
+function openNewUser() {
+  newAvatarSel = '🐷'; newColorSel = 0;
+  document.getElementById('new-name').value = '';
+  document.getElementById('new-prev-name').textContent = 'Name';
+  document.getElementById('new-prev-avatar').textContent = '🐷';
+  buildAvatarGrid('new-avatar-grid', 'new', AVATARS, newAvatarSel);
+  buildColorOpts('new-color-opts', 'new', newColorSel);
+  goScreen('newuser');
+}
+
+function updateNewPreview() {
+  const n = document.getElementById('new-name').value || 'Name';
+  document.getElementById('new-prev-name').textContent = n;
+}
+
+function buildAvatarGrid(elId, prefix, avatars, selected) {
+  document.getElementById(elId).innerHTML = avatars.map(a =>
+    `<div class="avatar-opt ${a === selected ? 'selected' : ''}" onclick="selectAvatar('${prefix}','${a}')">${a}</div>`
+  ).join('');
+}
+
+function selectAvatar(prefix, avatar) {
+  if (prefix === 'new') { newAvatarSel = avatar; buildAvatarGrid('new-avatar-grid', 'new', AVATARS, avatar); document.getElementById('new-prev-avatar').textContent = avatar; }
+  else { editAvatarSel = avatar; buildAvatarGrid('edit-avatar-grid', 'edit', AVATARS, avatar); document.getElementById('edit-prev-avatar').textContent = avatar; }
+}
+
+function buildColorOpts(elId, prefix, selected) {
+  document.getElementById(elId).innerHTML = COLORS.map(c =>
+    `<div class="color-opt ${c.id === selected ? 'selected' : ''}" style="background:linear-gradient(135deg,${c.bg[0]},${c.bg[1]})" onclick="selectColor('${prefix}',${c.id})" title="${c.label}"></div>`
+  ).join('');
+}
+
+function selectColor(prefix, id) {
+  if (prefix === 'new') { newColorSel = id; buildColorOpts('new-color-opts', 'new', id); }
+  else { editColorSel = id; buildColorOpts('edit-color-opts', 'edit', id); }
+}
+
+function createUser() {
+  const name = document.getElementById('new-name').value.trim();
+  if (!name) { toast('Enter a name', true); return; }
+  db.users.push({ name, avatar: newAvatarSel, color: newColorSel, balance: 0, transactions: [] });
+  save(); renderUsers(); goScreen('users');
+  toast(`${name} added! 🎉`);
+}
+
+// ============================================================
+// EDIT USER
+// ============================================================
+function goEditUser() {
+  openEditUser(currentUser);
+}
+function openEditFromUsers(idx) {
+  currentUser = idx;
+  openEditUser(idx);
+}
+function openEditUser(idx) {
+  const u = db.users[idx];
+  if (!u) return;
+  editAvatarSel = u.avatar || '🐷';
+  editColorSel = u.color ?? 0;
+  document.getElementById('edit-title').textContent = u.name;
+  document.getElementById('edit-name').value = u.name;
+  document.getElementById('edit-prev-name').textContent = u.name;
+  document.getElementById('edit-prev-avatar').textContent = editAvatarSel;
+  document.getElementById('edit-prev-bal').textContent = fmt(u.balance || 0) + ' balance';
+  buildAvatarGrid('edit-avatar-grid', 'edit', AVATARS, editAvatarSel);
+  buildColorOpts('edit-color-opts', 'edit', editColorSel);
+  goScreen('edituser');
+}
+
+function updateEditPreview() {
+  const n = document.getElementById('edit-name').value || 'Name';
+  document.getElementById('edit-prev-name').textContent = n;
+}
+
+function saveEditUser() {
+  const name = document.getElementById('edit-name').value.trim();
+  if (!name) { toast('Enter a name', true); return; }
+  const u = db.users[currentUser];
+  u.name = name; u.avatar = editAvatarSel; u.color = editColorSel;
+  save(); renderUsers(); renderDash();
+  toast('Saved ✓');
+  goScreen('dash');
+}
+
+function deleteUser() {
+  if (!confirm(`Remove ${db.users[currentUser].name}? This deletes all their data.`)) return;
+  db.users.splice(currentUser, 1);
+  currentUser = null;
+  save(); renderUsers(); goScreen('users');
+  toast('Person removed');
+}
+
+// ============================================================
+// KEYBOARD SUBMIT
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (currentScreen === 'add') confirmAdd();
+  if (currentScreen === 'spend') confirmSpend();
+  if (currentScreen === 'newuser') createUser();
+  if (currentScreen === 'edituser') saveEditUser();
+});
+
+// Intercept history screen
+document.getElementById('see-all-btn').addEventListener('click', () => {
+  renderHistory();
+});
+// Also on goScreen for history
+const origGoScreen = window.goScreen;
+
+// Override goScreen globally to handle history render
+window.goScreen = function(name) {
+  if (name === 'history') renderHistory();
+  goScreen(name);
+};
+
+// Fix see-all click calling wrong goScreen
+document.getElementById('see-all-btn').onclick = () => { renderHistory(); goScreen('history'); };
+
+// ============================================================
+// BOUNCE ANIMATION
+// ============================================================
+const style = document.createElement('style');
+style.textContent = `@keyframes bouncePig { 0%,100%{transform:scale(1) rotate(0deg)} 25%{transform:scale(1.2) rotate(-10deg)} 75%{transform:scale(0.95) rotate(8deg)} }`;
+document.head.appendChild(style);
+
+// ============================================================
+// INIT
+// ============================================================
+buildChips();
+renderUsers();
+</script>
+
 </body>
 </html>
