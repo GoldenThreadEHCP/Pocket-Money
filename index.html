@@ -250,9 +250,9 @@ min-height: 160px;
 .edit-btn {
 position: absolute; top: 10px; right: 10px;
 width: 28px; height: 28px;
-background: rgba(0,0,0,0.06); border-radius: 8px;
+background: rgba(0,0,0,0.08); border-radius: 8px;
 display: flex; align-items: center; justify-content: center;
-font-size: 13px; cursor: pointer; opacity: 0;
+font-size: 13px; cursor: pointer; opacity: 1;
 transition: opacity 0.2s;
 }
 .user-card:hover .edit-btn { opacity: 1; }
@@ -643,10 +643,14 @@ function goScreen(name) {
   const entering = document.getElementById('screen-' + name);
   if (!entering || name === currentScreen) return;
 
+  if (name === 'history') renderHistory();
+
   const goingBack = ['users', 'dash'].includes(name);
   leaving.classList.remove('active');
-  leaving.classList.add(goingBack ? '' : 'slide-left');
-  setTimeout(() => leaving.classList.remove('slide-left'), 300);
+  if (goingBack) {
+    leaving.classList.add('slide-left');
+    setTimeout(() => leaving.classList.remove('slide-left'), 300);
+  }
 
   entering.style.transform = goingBack ? 'translateX(-30px)' : 'translateX(30px)';
   entering.style.opacity = '0';
@@ -839,7 +843,8 @@ function deleteTx(id) {
   if (!tx) return;
   u.balance = (u.balance || 0) + (tx.type === 'add' ? -tx.amount : tx.amount);
   u.transactions = u.transactions.filter(t => t.id !== id);
-  save(); renderDash(); renderHistory();
+  save(); renderDash();
+  if (currentScreen === 'history') renderHistory();
   toast('Removed');
 }
 
@@ -858,9 +863,6 @@ function renderHistory() {
     el.innerHTML = txs.map(tx => txRow(tx)).join('');
   }
 }
-
-// override goScreen for history
-const _goScreen = goScreen;
 
 // ============================================================
 // NEW USER
@@ -969,21 +971,7 @@ document.addEventListener('keydown', e => {
   if (currentScreen === 'edituser') saveEditUser();
 });
 
-// Intercept history screen
-document.getElementById('see-all-btn').addEventListener('click', () => {
-  renderHistory();
-});
-// Also on goScreen for history
-const origGoScreen = window.goScreen;
 
-// Override goScreen globally to handle history render
-window.goScreen = function(name) {
-  if (name === 'history') renderHistory();
-  goScreen(name);
-};
-
-// Fix see-all click calling wrong goScreen
-document.getElementById('see-all-btn').onclick = () => { renderHistory(); goScreen('history'); };
 
 // ============================================================
 // BOUNCE ANIMATION
