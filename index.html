@@ -28,7 +28,7 @@
     --safe-bot: env(safe-area-inset-bottom, 0px);
   }
 
-- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; -webkit-user-callout: none; }
 
 html, body {
 height: 100%;
@@ -770,7 +770,7 @@ function txRow(tx) {
       <div class="tx-date">${fmtDate(tx.date)}</div>
     </div>
     <div class="tx-amount ${tx.type}">${tx.type === 'add' ? '+' : '-'}${fmt(tx.amount)}</div>
-    <button class="tx-del" onclick="deleteTx(${tx.id})" title="Remove">✕</button>
+    <button class="tx-del" onclick="deleteTx(${tx.id})">✕</button>
   </div>`;
 }
 
@@ -895,7 +895,7 @@ function selectAvatar(prefix, avatar) {
 
 function buildColorOpts(elId, prefix, selected) {
   document.getElementById(elId).innerHTML = COLORS.map(c =>
-    `<div class="color-opt ${c.id === selected ? 'selected' : ''}" style="background:linear-gradient(135deg,${c.bg[0]},${c.bg[1]})" onclick="selectColor('${prefix}',${c.id})" title="${c.label}"></div>`
+    `<div class="color-opt ${c.id === selected ? 'selected' : ''}" style="background:linear-gradient(135deg,${c.bg[0]},${c.bg[1]})" onclick="selectColor('${prefix}',${c.id})"></div>`
   ).join('');
 }
 
