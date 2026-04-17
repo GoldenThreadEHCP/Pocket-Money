@@ -8,987 +8,1101 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#FF8C5A">
 <title>Pocket Money</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --orange: #FF8C5A;
-    --orange-dark: #E8724A;
-    --green: #5DBE8A;
-    --green-dark: #4AAD7A;
-    --red: #FF6B6B;
-    --blue: #5B9EFF;
-    --yellow: #FFD166;
-    --bg: #FFF7F0;
-    --card: #FFFFFF;
-    --text: #2D1F14;
-    --muted: #B8A89A;
-    --border: #F0E4D8;
-    --radius: 24px;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bot: env(safe-area-inset-bottom, 0px);
-  }
-
-- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; -webkit-user-callout: none; }
-
-html, body {
-height: 100%;
-font-family: ‘Nunito’, sans-serif;
-background: var(–bg);
-color: var(–text);
-overflow: hidden;
+:root {
+  --orange: #FF8C5A; --orange-d: #E8724A;
+  --green: #5DBE8A; --green-d: #4AAD7A;
+  --red: #FF6B6B; --blue: #5B9EFF;
+  --bg: #FFF7F0; --card: #FFFFFF;
+  --text: #2D1F14; --muted: #B8A89A; --border: #F0E4D8;
+  --safe-top: env(safe-area-inset-top,0px);
+  --safe-bot: env(safe-area-inset-bottom,0px);
 }
-
-#app {
-height: 100%;
-display: flex;
-flex-direction: column;
-max-width: 480px;
-margin: 0 auto;
-position: relative;
-overflow: hidden;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-user-callout:none;}
+html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
+#app{height:100%;max-width:480px;margin:0 auto;position:relative;overflow:hidden;}
 
 /* SCREENS */
-.screen {
-position: absolute;
-inset: 0;
-display: flex;
-flex-direction: column;
-opacity: 0;
-pointer-events: none;
-visibility: hidden;
-transform: translateX(30px);
-transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
-overflow: hidden;
-}
-.screen.active {
-opacity: 1;
-pointer-events: all;
-visibility: visible;
-transform: translateX(0);
-}
-.screen.slide-left {
-transform: translateX(-30px);
-}
-
-.scroll-body {
-flex: 1;
-overflow-y: auto;
--webkit-overflow-scrolling: touch;
-padding-bottom: calc(20px + var(–safe-bot));
-}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;visibility:hidden;transform:translateX(30px);transition:opacity .25s ease,transform .25s ease,visibility .25s;overflow:hidden;}
+.screen.active{opacity:1;pointer-events:all;visibility:visible;transform:translateX(0);}
+.screen.exit-left{transform:translateX(-30px)!important;opacity:0!important;visibility:hidden!important;}
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(24px + var(–safe-bot));}
 
 /* TOPBAR */
-.topbar {
-padding: calc(var(–safe-top) + 16px) 20px 16px;
-background: var(–bg);
-display: flex;
-align-items: center;
-gap: 12px;
-flex-shrink: 0;
-position: relative;
-z-index: 10;
-}
-.topbar-title {
-font-family: ‘Baloo 2’, sans-serif;
-font-size: 22px;
-font-weight: 800;
-color: var(–text);
-flex: 1;
-}
-.topbar-sub {
-font-size: 12px;
-font-weight: 700;
-color: var(–muted);
-letter-spacing: 1px;
-text-transform: uppercase;
-}
-.back-btn {
-width: 40px; height: 40px;
-background: var(–card);
-border: 2px solid var(–border);
-border-radius: 14px;
-cursor: pointer;
-display: flex; align-items: center; justify-content: center;
-font-size: 18px;
-flex-shrink: 0;
-transition: all 0.15s;
-}
-.back-btn:active { transform: scale(0.92); background: var(–border); }
+.topbar{padding:calc(var(–safe-top) + 14px) 20px 14px;background:var(–bg);display:flex;align-items:center;gap:12px;flex-shrink:0;z-index:10;}
+.topbar-title{font-family:‘Baloo 2’,sans-serif;font-size:21px;font-weight:800;color:var(–text);flex:1;}
+.topbar-sub{font-size:11px;font-weight:700;color:var(–muted);letter-spacing:1px;text-transform:uppercase;}
+.back-btn{width:40px;height:40px;background:var(–card);border:2px solid var(–border);border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:all .15s;}
+.back-btn:active{transform:scale(.92);background:var(–border);}
 
 /* CARDS */
-.card {
-background: var(–card);
-border-radius: var(–radius);
-padding: 20px;
-box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-}
+.card{background:var(–card);border-radius:24px;padding:20px;box-shadow:0 2px 16px rgba(0,0,0,.06);}
 
 /* BUTTONS */
-.btn {
-border: none; cursor: pointer;
-border-radius: 18px;
-font-family: ‘Nunito’, sans-serif;
-font-weight: 800;
-font-size: 16px;
-padding: 15px 24px;
-transition: all 0.15s;
-display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn:active { transform: scale(0.95); }
-.btn-primary { background: var(–orange); color: white; box-shadow: 0 4px 14px rgba(255,140,90,0.4); }
-.btn-green { background: var(–green); color: white; box-shadow: 0 4px 14px rgba(93,190,138,0.4); }
-.btn-red { background: var(–red); color: white; box-shadow: 0 4px 14px rgba(255,107,107,0.4); }
-.btn-ghost { background: var(–card); color: var(–muted); border: 2px solid var(–border); }
-.btn-full { width: 100%; }
-.btn-sm { padding: 10px 18px; font-size: 14px; border-radius: 14px; }
+.btn{border:none;cursor:pointer;border-radius:18px;font-family:‘Nunito’,sans-serif;font-weight:800;font-size:16px;padding:15px 24px;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;}
+.btn:active{transform:scale(.95);}
+.btn-orange{background:var(–orange);color:#fff;box-shadow:0 4px 14px rgba(255,140,90,.4);}
+.btn-green{background:var(–green);color:#fff;box-shadow:0 4px 14px rgba(93,190,138,.4);}
+.btn-red{background:var(–red);color:#fff;box-shadow:0 4px 14px rgba(255,107,107,.4);}
+.btn-ghost{background:var(–card);color:var(–muted);border:2px solid var(–border);}
+.btn-sm{padding:10px 18px;font-size:14px;border-radius:14px;width:auto;}
+.btn-link{background:none;border:none;color:var(–orange);font-weight:800;font-size:14px;cursor:pointer;padding:4px 0;width:auto;display:inline;}
 
-/* INPUT */
-.input-group { margin-bottom: 16px; }
-.input-label { font-size: 12px; font-weight: 800; color: var(–muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
-.input {
-width: 100%; border: 2.5px solid var(–border);
-border-radius: 16px; padding: 14px 18px;
-font-size: 18px; font-family: ‘Nunito’, sans-serif; font-weight: 800;
-background: var(–card); outline: none; color: var(–text);
-transition: border 0.2s, box-shadow 0.2s;
-}
-.input:focus { border-color: var(–orange); box-shadow: 0 0 0 4px rgba(255,140,90,0.12); }
-.input.amount-input { font-size: 32px; text-align: center; letter-spacing: -1px; }
+/* INPUTS */
+.input-label{font-size:11px;font-weight:800;color:var(–muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;display:block;}
+.input{width:100%;border:2.5px solid var(–border);border-radius:16px;padding:14px 18px;font-size:16px;font-family:‘Nunito’,sans-serif;font-weight:700;background:var(–card);outline:none;color:var(–text);transition:border .2s,box-shadow .2s;}
+.input:focus{border-color:var(–orange);box-shadow:0 0 0 4px rgba(255,140,90,.12);}
+.input.big{font-size:32px;text-align:center;}
+.input-wrap{position:relative;margin-bottom:14px;}
+.input-wrap .input-label{margin-bottom:8px;}
+.pw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(–muted);margin-top:13px;}
 
 /* CHIPS */
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip {
-display: inline-flex; align-items: center; gap: 6px;
-background: var(–card); border: 2px solid var(–border);
-border-radius: 50px; padding: 8px 14px;
-font-size: 13px; font-weight: 800; cursor: pointer;
-transition: all 0.15s; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-.chip:active { transform: scale(0.95); }
-.chip.green { border-color: #C0EDD5; background: #F0FBF5; color: var(–green-dark); }
-.chip.red { border-color: #FFD0D0; background: #FFF5F5; color: #E05050; }
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(–card);border:2px solid var(–border);border-radius:50px;padding:8px 14px;font-size:13px;font-weight:800;cursor:pointer;transition:all .15s;}
+.chip:active{transform:scale(.95);}
+.chip.green{border-color:#C0EDD5;background:#F0FBF5;color:var(–green-d);}
+.chip.red{border-color:#FFD0D0;background:#FFF5F5;color:#E05050;}
 
 /* TOAST */
-#toast {
-position: fixed; bottom: calc(20px + var(–safe-bot)); left: 50%;
-transform: translateX(-50%) translateY(0);
-background: #2D1F14; color: white;
-padding: 12px 22px; border-radius: 50px;
-font-weight: 800; font-size: 14px;
-z-index: 1000;
-transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-white-space: nowrap; pointer-events: none;
-box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-opacity: 0; visibility: hidden;
-}
-#toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-#toast.error { background: var(–red); }
+#toast{position:fixed;bottom:calc(20px + var(–safe-bot));left:50%;transform:translateX(-50%);background:#2D1F14;color:#fff;padding:12px 22px;border-radius:50px;font-weight:800;font-size:14px;z-index:9999;white-space:nowrap;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s;}
+#toast.show{opacity:1;visibility:visible;}
+#toast.err{background:var(–red);}
 
-/* ======== SCREEN: USERS ======== */
-#screen-users .scroll-body { padding: 0 20px 20px; }
+/* ====== AUTH SCREENS ====== */
+.auth-screen{display:flex;flex-direction:column;justify-content:center;padding:0 28px;background:linear-gradient(160deg,#FFF7F0 0%,#FFE8D8 100%);min-height:100%;}
+.auth-logo{text-align:center;margin-bottom:32px;}
+.auth-logo-icon{width:72px;height:72px;background:linear-gradient(135deg,var(–orange),#FF6B8A);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 12px;box-shadow:0 8px 24px rgba(255,140,90,.35);}
+.auth-logo-title{font-family:‘Baloo 2’,sans-serif;font-size:30px;font-weight:800;color:var(–text);}
+.auth-logo-sub{font-size:14px;color:var(–muted);font-weight:600;margin-top:2px;}
+.auth-card{background:var(–card);border-radius:28px;padding:28px 24px;box-shadow:0 8px 32px rgba(0,0,0,.1);}
+.auth-title{font-family:‘Baloo 2’,sans-serif;font-size:22px;font-weight:800;color:var(–text);margin-bottom:20px;}
+.auth-footer{text-align:center;margin-top:20px;font-size:14px;color:var(–muted);font-weight:600;}
+.divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(–muted);font-size:12px;font-weight:700;}
+.divider::before,.divider::after{content:’’;flex:1;height:1.5px;background:var(–border);}
 
-.users-header {
-padding: 0 20px 20px;
-}
-.app-logo {
-display: flex; align-items: center; gap: 12px;
-padding: calc(var(–safe-top) + 20px) 20px 20px;
-}
-.app-logo-icon {
-width: 52px; height: 52px;
-background: linear-gradient(135deg, var(–orange), #FF6B8A);
-border-radius: 18px;
-display: flex; align-items: center; justify-content: center;
-font-size: 26px;
-box-shadow: 0 4px 16px rgba(255,140,90,0.4);
-}
-.app-logo-text { font-family: ‘Baloo 2’, sans-serif; font-size: 26px; font-weight: 800; color: var(–text); line-height: 1; }
-.app-logo-sub { font-size: 13px; color: var(–muted); font-weight: 600; }
+/* ====== USER GRID ====== */
+.app-logo{display:flex;align-items:center;gap:12px;padding:calc(var(–safe-top)+18px) 20px 16px;}
+.app-logo-icon{width:48px;height:48px;background:linear-gradient(135deg,var(–orange),#FF6B8A);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 14px rgba(255,140,90,.35);}
+.app-logo-text{font-family:‘Baloo 2’,sans-serif;font-size:22px;font-weight:800;color:var(–text);line-height:1;}
+.app-logo-sub{font-size:12px;color:var(–muted);font-weight:600;}
+.app-logo-logout{margin-left:auto;background:none;border:2px solid var(–border);border-radius:12px;padding:8px 14px;font-size:13px;font-weight:700;color:var(–muted);cursor:pointer;white-space:nowrap;}
+.app-logo-logout:active{background:var(–border);}
+.user-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.user-card{border-radius:22px;padding:20px 16px 18px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .2s;position:relative;border:2.5px solid transparent;}
+.user-card:active{transform:scale(.96);}
+.user-card .uavatar{font-size:48px;line-height:1;}
+.user-card .uname{font-weight:800;font-size:15px;color:var(–text);text-align:center;}
+.user-card .ubal{font-family:‘Baloo 2’,sans-serif;font-weight:700;font-size:20px;}
+.user-card .ugoal{font-size:11px;font-weight:700;color:var(–muted);margin-top:-4px;}
+.user-card.c0{background:linear-gradient(145deg,#FFF5F0,#FFEEE5);border-color:#FFD8C8;} .user-card.c0 .ubal{color:var(–orange);}
+.user-card.c1{background:linear-gradient(145deg,#F0FAF5,#E5F7EC);border-color:#C0EDD5;} .user-card.c1 .ubal{color:var(–green-d);}
+.user-card.c2{background:linear-gradient(145deg,#EEF5FF,#E5EEFF);border-color:#C0D4FF;} .user-card.c2 .ubal{color:#4A7AEE);}
+.user-card.c3{background:linear-gradient(145deg,#FFFAE8,#FFF6D8);border-color:#FFE898;} .user-card.c3 .ubal{color:#C8900A;}
+.user-card.c4{background:linear-gradient(145deg,#FFF0F6,#FFE5F0);border-color:#FFC8DE);} .user-card.c4 .ubal{color:#C8406A;}
+.user-card.c5{background:linear-gradient(145deg,#F5F0FF,#EDE5FF);border-color:#D0B8FF;} .user-card.c5 .ubal{color:#7048E8;}
+.edit-btn{position:absolute;top:10px;right:10px;width:28px;height:28px;background:rgba(0,0,0,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;}
+.edit-btn:active{background:rgba(0,0,0,.18);}
+.add-kid-card{border-radius:22px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all .2s;border:2.5px dashed var(–border);min-height:160px;background:var(–card);}
+.add-kid-card:active{transform:scale(.96);background:#FFF0E8;border-color:var(–orange);}
+.add-kid-card .plus{font-size:32px;color:var(–muted);}
+.add-kid-card span{font-weight:800;color:var(–muted);font-size:14px;}
+.goal-bar-wrap{width:100%;background:#E8E0D8;border-radius:50px;height:6px;overflow:hidden;margin-top:2px;}
+.goal-bar{height:100%;border-radius:50px;background:linear-gradient(90deg,var(–green),#8BE8B5);transition:width .4s ease;}
 
-.user-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+/* ====== DASHBOARD ====== */
+.balance-hero{border-radius:28px;padding:26px 22px;text-align:center;position:relative;overflow:hidden;margin:0 20px 16px;}
+.balance-hero::before{content:’’;position:absolute;top:-40px;right:-40px;width:130px;height:130px;background:rgba(255,255,255,.12);border-radius:50%;}
+.balance-hero::after{content:’’;position:absolute;bottom:-40px;left:-20px;width:110px;height:110px;background:rgba(255,255,255,.08);border-radius:50%;}
+.hero-avatar{font-size:58px;display:block;cursor:pointer;position:relative;z-index:1;}
+.hero-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;position:relative;z-index:1;}
+.hero-amount{font-family:‘Baloo 2’,sans-serif;font-size:54px;font-weight:800;color:#fff;line-height:1.1;position:relative;z-index:1;}
+.hero-mood{font-size:13px;font-weight:700;color:rgba(255,255,255,.65);margin-top:4px;position:relative;z-index:1;}
+.hero-goal{margin-top:14px;position:relative;z-index:1;}
+.hero-goal-label{font-size:12px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:6px;}
+.hero-goal-bar{width:100%;background:rgba(255,255,255,.2);border-radius:50px;height:8px;overflow:hidden;}
+.hero-goal-fill{height:100%;border-radius:50px;background:#fff;transition:width .4s;}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 16px;}
+.action-btn{border-radius:20px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;border:none;font-family:‘Nunito’,sans-serif;font-weight:800;font-size:15px;transition:all .15s;}
+.action-btn:active{transform:scale(.95);}
+.action-btn .aicon{font-size:26px;}
+.action-btn.add{background:var(–green);color:#fff;box-shadow:0 4px 14px rgba(93,190,138,.35);}
+.action-btn.spend{background:var(–orange);color:#fff;box-shadow:0 4px 14px rgba(255,140,90,.35);}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.section-title{font-weight:900;font-size:16px;color:var(–text);}
+.see-all{font-size:13px;font-weight:700;color:var(–orange);cursor:pointer;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 20px 16px;}
+.stat-card{border-radius:18px;padding:14px;text-align:center;}
+.stat-card.e{background:#E8F8EE;} .stat-card.e .sv{color:var(–green-d);} .stat-card.e .sl{color:var(–green);}
+.stat-card.s{background:#FEF0EC;} .stat-card.s .sv{color:#E05C3A;} .stat-card.s .sl{color:#F08060;}
+.sv{font-family:‘Baloo 2’,sans-serif;font-size:20px;font-weight:800;}
+.sl{font-size:11px;font-weight:700;margin-top:2px;}
+.tx-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(–border);}
+.tx-row:last-child{border-bottom:none;}
+.tx-icon{width:38px;height:38px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.tx-icon.add{background:#E8F8EE;} .tx-icon.spend{background:#FEF0EC;}
+.tx-info{flex:1;min-width:0;}
+.tx-desc{font-weight:800;font-size:14px;color:var(–text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tx-date{font-size:11px;color:var(–muted);font-weight:600;margin-top:1px;}
+.tx-amt{font-family:‘Baloo 2’,sans-serif;font-weight:700;font-size:16px;}
+.tx-amt.add{color:var(–green-d);} .tx-amt.spend{color:#E05C3A;}
+.tx-del{background:none;border:none;font-size:15px;color:#CCC;cursor:pointer;padding:6px;flex-shrink:0;}
+.tx-del:active{color:var(–red);}
+.empty{text-align:center;padding:36px 20px;}
+.empty-icon{font-size:48px;margin-bottom:10px;}
+.empty p{font-weight:700;color:var(–muted);font-size:14px;}
 
-.user-card {
-background: var(–card);
-border-radius: 22px;
-padding: 20px 16px;
-display: flex; flex-direction: column; align-items: center; gap: 10px;
-box-shadow: 0 2px 14px rgba(0,0,0,0.07);
-cursor: pointer;
-transition: all 0.2s;
-position: relative;
-border: 2.5px solid transparent;
-}
-.user-card:active { transform: scale(0.96); }
-.user-card .avatar { font-size: 52px; line-height: 1; }
-.user-card .user-name { font-weight: 800; font-size: 15px; color: var(–text); text-align: center; }
-.user-card .user-balance { font-family: ‘Baloo 2’, sans-serif; font-weight: 700; font-size: 20px; }
-.user-card.color-0 { background: linear-gradient(145deg, #FFF5F0, #FFF0E8); border-color: #FFE0D0; }
-.user-card.color-0 .user-balance { color: var(–orange); }
-.user-card.color-1 { background: linear-gradient(145deg, #F0FAF5, #E8F8F0); border-color: #C8EDD8; }
-.user-card.color-1 .user-balance { color: var(–green-dark); }
-.user-card.color-2 { background: linear-gradient(145deg, #F0F6FF, #EAF0FF); border-color: #C8D8FF; }
-.user-card.color-2 .user-balance { color: var(–blue); }
-.user-card.color-3 { background: linear-gradient(145deg, #FFFBF0, #FFF7E0); border-color: #FFE8A0; }
-.user-card.color-3 .user-balance { color: #C8900A; }
-.user-card.color-4 { background: linear-gradient(145deg, #FFF0F5, #FFE8F2); border-color: #FFD0E5; }
-.user-card.color-4 .user-balance { color: #C8406A; }
-.user-card.color-5 { background: linear-gradient(145deg, #F5F0FF, #EDE8FF); border-color: #D8C8FF; }
-.user-card.color-5 .user-balance { color: #7048E8; }
+/* ALLOWANCE BADGE */
+.allowance-badge{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#FFF5F0,#FFE8D8);border:2px solid #FFD0B8;border-radius:16px;padding:10px 14px;margin:0 20px 16px;}
+.allowance-badge .ab-icon{font-size:22px;}
+.allowance-badge .ab-text{flex:1;font-size:13px;font-weight:700;color:var(–text);}
+.allowance-badge .ab-sub{font-size:11px;color:var(–muted);font-weight:600;}
+.allowance-badge .ab-edit{font-size:13px;color:var(–orange);font-weight:700;cursor:pointer;background:none;border:none;}
 
-.add-user-card {
-background: var(–card);
-border-radius: 22px;
-padding: 20px 16px;
-display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-box-shadow: 0 2px 14px rgba(0,0,0,0.04);
-cursor: pointer;
-transition: all 0.2s;
-border: 2.5px dashed var(–border);
-min-height: 160px;
-}
-.add-user-card:active { transform: scale(0.96); background: #FFF0E8; border-color: var(–orange); }
-.add-user-card .plus { font-size: 36px; color: var(–muted); }
-.add-user-card span { font-weight: 800; color: var(–muted); font-size: 14px; }
+/* AVATAR / COLOR PICKERS */
+.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:8px;}
+.av-opt{aspect-ratio:1;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;background:var(–bg);border:2.5px solid transparent;transition:all .15s;}
+.av-opt:active{transform:scale(.9);}
+.av-opt.sel{border-color:var(–orange);background:#FFF5F0;box-shadow:0 0 0 3px rgba(255,140,90,.2);}
+.col-opts{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+.col-opt{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,.12);}
+.col-opt.sel{border-color:var(–text);transform:scale(1.15);}
+.prev-row{display:flex;align-items:center;gap:14px;padding:14px;background:var(–bg);border-radius:16px;margin-bottom:18px;}
+.prev-row .pav{font-size:42px;}
+.prev-row .pname{font-weight:900;font-size:17px;color:var(–text);}
+.prev-row .pbal{font-family:‘Baloo 2’,sans-serif;font-size:14px;font-weight:700;color:var(–muted);}
 
-.edit-btn {
-position: absolute; top: 10px; right: 10px;
-width: 28px; height: 28px;
-background: rgba(0,0,0,0.08); border-radius: 8px;
-display: flex; align-items: center; justify-content: center;
-font-size: 13px; cursor: pointer; opacity: 1;
-transition: opacity 0.2s;
-}
-.user-card:hover .edit-btn { opacity: 1; }
+/* GOAL SECTION */
+.goal-section{background:linear-gradient(135deg,#FFF5F0,#FFEEDD);border:2px solid #FFD8B8;border-radius:20px;padding:16px;margin-bottom:14px;}
+.goal-section .gs-title{font-weight:800;font-size:14px;color:var(–text);margin-bottom:10px;}
+.goal-progress{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;font-weight:700;}
+.goal-progress .gp-left{color:var(–text);}
+.goal-progress .gp-pct{color:var(–orange);}
+.goal-bar2{width:100%;background:#F0E0D0;border-radius:50px;height:10px;overflow:hidden;}
+.goal-bar2-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(–orange),#FF6B8A);transition:width .4s;}
 
-/* ======== SCREEN: DASHBOARD ======== */
-#screen-dash .scroll-body { padding: 0 20px; }
-
-.balance-card {
-border-radius: 28px;
-padding: 28px 24px;
-text-align: center;
-position: relative;
-overflow: hidden;
-margin-bottom: 18px;
-}
-.balance-card::before {
-content: ‘’; position: absolute;
-top: -40px; right: -40px;
-width: 140px; height: 140px;
-background: rgba(255,255,255,0.12);
-border-radius: 50%;
-}
-.balance-card::after {
-content: ‘’; position: absolute;
-bottom: -50px; left: -20px;
-width: 120px; height: 120px;
-background: rgba(255,255,255,0.08);
-border-radius: 50%;
-}
-.balance-avatar { font-size: 60px; display: block; margin-bottom: 4px; cursor: pointer; transition: transform 0.15s; position: relative; z-index: 1; }
-.balance-avatar:active { transform: scale(1.15) rotate(10deg); }
-.balance-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.7); letter-spacing: 1.5px; text-transform: uppercase; position: relative; z-index: 1; }
-.balance-amount { font-family: ‘Baloo 2’, sans-serif; font-size: 58px; font-weight: 800; color: white; line-height: 1.1; position: relative; z-index: 1; }
-.balance-sub { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.65); margin-top: 4px; position: relative; z-index: 1; }
-
-.action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
-.action-btn {
-border-radius: 20px; padding: 18px 12px;
-display: flex; flex-direction: column; align-items: center; gap: 6px;
-cursor: pointer; border: none; font-family: ‘Nunito’, sans-serif;
-font-weight: 800; font-size: 15px; transition: all 0.15s;
-}
-.action-btn:active { transform: scale(0.95); }
-.action-btn .action-icon { font-size: 28px; }
-.action-btn.add { background: var(–green); color: white; box-shadow: 0 4px 14px rgba(93,190,138,0.35); }
-.action-btn.spend { background: var(–orange); color: white; box-shadow: 0 4px 14px rgba(255,140,90,0.35); }
-
-.section-head {
-display: flex; justify-content: space-between; align-items: center;
-margin-bottom: 12px;
-}
-.section-title { font-weight: 900; font-size: 16px; color: var(–text); }
-.see-all { font-size: 13px; font-weight: 700; color: var(–orange); cursor: pointer; }
-
-.tx-list { display: flex; flex-direction: column; gap: 2px; }
-.tx-row {
-display: flex; align-items: center; gap: 12px;
-padding: 12px 0; border-bottom: 1px solid var(–border);
-}
-.tx-row:last-child { border-bottom: none; }
-.tx-icon {
-width: 40px; height: 40px; border-radius: 14px;
-display: flex; align-items: center; justify-content: center;
-font-size: 19px; flex-shrink: 0;
-}
-.tx-icon.add { background: #E8F8EE; }
-.tx-icon.spend { background: #FEF0EC; }
-.tx-info { flex: 1; min-width: 0; }
-.tx-desc { font-weight: 800; font-size: 14px; color: var(–text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tx-date { font-size: 12px; color: var(–muted); font-weight: 600; margin-top: 1px; }
-.tx-amount { font-family: ‘Baloo 2’, sans-serif; font-weight: 700; font-size: 17px; }
-.tx-amount.add { color: var(–green-dark); }
-.tx-amount.spend { color: #E05C3A; }
-.tx-del { background: none; border: none; font-size: 16px; color: #DDD; cursor: pointer; padding: 4px; flex-shrink: 0; }
-.tx-del:active { color: var(–red); }
-
-.empty-state { text-align: center; padding: 40px 20px; }
-.empty-state .empty-icon { font-size: 52px; margin-bottom: 12px; }
-.empty-state p { font-weight: 700; color: var(–muted); font-size: 15px; }
-
-/* STATS ROW */
-.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
-.stat-card { border-radius: 18px; padding: 16px; text-align: center; }
-.stat-card.earned { background: #E8F8EE; }
-.stat-card.spent { background: #FEF0EC; }
-.stat-val { font-family: ‘Baloo 2’, sans-serif; font-size: 22px; font-weight: 800; }
-.stat-card.earned .stat-val { color: var(–green-dark); }
-.stat-card.spent .stat-val { color: #E05C3A; }
-.stat-lbl { font-size: 12px; font-weight: 700; }
-.stat-card.earned .stat-lbl { color: var(–green); }
-.stat-card.spent .stat-lbl { color: #F08060; }
-
-/* ======== SCREEN: ADD/SPEND ======== */
-#screen-add .scroll-body,
-#screen-spend .scroll-body { padding: 0 20px; }
-
-/* ======== SCREEN: HISTORY ======== */
-#screen-history .scroll-body { padding: 0 20px; }
-
-/* ======== SCREEN: NEW USER / EDIT USER ======== */
-#screen-newuser .scroll-body,
-#screen-edituser .scroll-body { padding: 0 20px; }
-
-.avatar-grid {
-display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;
-margin-top: 8px;
-}
-.avatar-opt {
-aspect-ratio: 1; border-radius: 14px;
-display: flex; align-items: center; justify-content: center;
-font-size: 26px; cursor: pointer;
-background: var(–bg); border: 2.5px solid transparent;
-transition: all 0.15s;
-}
-.avatar-opt:active { transform: scale(0.9); }
-.avatar-opt.selected { border-color: var(–orange); background: #FFF5F0; box-shadow: 0 0 0 3px rgba(255,140,90,0.2); }
-
-.color-opts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-.color-opt {
-width: 36px; height: 36px; border-radius: 50%;
-cursor: pointer; border: 3px solid transparent;
-transition: all 0.15s; box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-}
-.color-opt.selected { border-color: var(–text); transform: scale(1.15); }
-
-.user-preview {
-display: flex; align-items: center; gap: 16px;
-padding: 16px; background: var(–bg); border-radius: 18px; margin-bottom: 20px;
-}
-.user-preview .prev-avatar { font-size: 44px; }
-.user-preview .prev-name { font-weight: 900; font-size: 18px; color: var(–text); }
-.user-preview .prev-bal { font-family: ‘Baloo 2’, sans-serif; font-size: 16px; font-weight: 700; color: var(–muted); }
+@keyframes pigBounce{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1.2) rotate(-10deg)}75%{transform:scale(.95) rotate(8deg)}}
 </style>
 
 </head>
 <body>
 <div id="app">
-  <div id="toast"></div>
 
-  <!-- ===== SCREEN: USERS ===== -->
+<div id="toast"></div>
 
-  <div class="screen active" id="screen-users">
-    <div class="app-logo">
-      <div class="app-logo-icon">🐷</div>
-      <div>
-        <div class="app-logo-text">Pocket Money</div>
-        <div class="app-logo-sub">Who's saving today?</div>
-      </div>
-    </div>
-    <div class="scroll-body" style="padding:0 20px 20px;">
-      <div class="user-grid" id="user-grid"></div>
-    </div>
-  </div>
+<!-- ===== LOGIN ===== -->
 
-  <!-- ===== SCREEN: DASHBOARD ===== -->
-
-  <div class="screen" id="screen-dash">
-    <div class="topbar">
-      <button class="back-btn" onclick="goScreen('users')">←</button>
-      <div>
-        <div class="topbar-sub">Savings</div>
-        <div class="topbar-title" id="dash-name">—</div>
+<div class="screen active" id="s-login">
+  <div class="scroll-body">
+    <div class="auth-screen">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🐷</div>
+        <div class="auth-logo-title">Pocket Money</div>
+        <div class="auth-logo-sub">Track every penny 🪙</div>
       </div>
-      <button class="btn btn-ghost btn-sm" onclick="goEditUser()" style="margin-left:auto;">✏️ Edit</button>
-    </div>
-    <div class="scroll-body" id="dash-scroll">
-      <div id="balance-card" class="balance-card" style="margin:0 20px 18px;">
-        <span class="balance-avatar" id="dash-avatar" onclick="bouncePig()">🐷</span>
-        <div class="balance-label">Balance</div>
-        <div class="balance-amount" id="dash-balance">£0.00</div>
-        <div class="balance-sub" id="dash-mood">Start saving! 💪</div>
-      </div>
-      <div class="action-row" style="margin:0 20px 18px;">
-        <button class="action-btn add" onclick="goScreen('add')">
-          <span class="action-icon">💰</span>Add Money
-        </button>
-        <button class="action-btn spend" onclick="goScreen('spend')">
-          <span class="action-icon">🛍️</span>Spend
-        </button>
-      </div>
-      <div style="padding:0 20px;">
-        <div class="stats-row" id="dash-stats"></div>
-        <div class="card">
-          <div class="section-head">
-            <div class="section-title">Recent</div>
-            <div class="see-all" id="see-all-btn" onclick="goScreen('history')" style="display:none;">See all →</div>
-          </div>
-          <div class="tx-list" id="dash-tx"></div>
+      <div class="auth-card">
+        <div class="auth-title">Welcome back!</div>
+        <div class="input-wrap">
+          <label class="input-label">Username or Email</label>
+          <input class="input" id="li-user" type="text" placeholder="Enter username" autocomplete="username" autocapitalize="none">
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== SCREEN: ADD MONEY ===== -->
-
-  <div class="screen" id="screen-add">
-    <div class="topbar">
-      <button class="back-btn" onclick="goScreen('dash')">←</button>
-      <div>
-        <div class="topbar-sub">Adding to</div>
-        <div class="topbar-title" id="add-name">—</div>
-      </div>
-    </div>
-    <div class="scroll-body" style="padding:0 20px;">
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">Amount</label>
-        <input class="input amount-input" id="add-amount" type="number" min="0" step="0.01" placeholder="£0.00" inputmode="decimal">
-      </div>
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">What for?</label>
-        <input class="input" id="add-label" type="text" placeholder="e.g. Birthday money">
-      </div>
-      <div style="margin-bottom:20px;">
-        <div class="input-label">Quick Add</div>
-        <div class="chips" id="earn-chips"></div>
-      </div>
-      <button class="btn btn-green btn-full" id="add-confirm-btn" onclick="confirmAdd()">Add Money ✓</button>
-    </div>
-  </div>
-
-  <!-- ===== SCREEN: SPEND ===== -->
-
-  <div class="screen" id="screen-spend">
-    <div class="topbar">
-      <button class="back-btn" onclick="goScreen('dash')">←</button>
-      <div>
-        <div class="topbar-sub">Spending from</div>
-        <div class="topbar-title" id="spend-name">—</div>
-      </div>
-    </div>
-    <div class="scroll-body" style="padding:0 20px;">
-      <div style="text-align:center; margin-bottom:16px;">
-        <span style="font-size:13px; font-weight:700; color:var(--muted);">Balance: </span>
-        <span style="font-family:'Baloo 2'; font-size:16px; font-weight:700; color:var(--orange);" id="spend-bal-display">£0.00</span>
-      </div>
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">Amount</label>
-        <input class="input amount-input" id="spend-amount" type="number" min="0" step="0.01" placeholder="£0.00" inputmode="decimal">
-      </div>
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">What did you buy?</label>
-        <input class="input" id="spend-label" type="text" placeholder="e.g. Sweets">
-      </div>
-      <div style="margin-bottom:20px;">
-        <div class="input-label">Quick Spend</div>
-        <div class="chips" id="spend-chips"></div>
-      </div>
-      <button class="btn btn-primary btn-full" onclick="confirmSpend()">Spend ✓</button>
-    </div>
-  </div>
-
-  <!-- ===== SCREEN: HISTORY ===== -->
-
-  <div class="screen" id="screen-history">
-    <div class="topbar">
-      <button class="back-btn" onclick="goScreen('dash')">←</button>
-      <div>
-        <div class="topbar-sub" id="hist-sub">History</div>
-        <div class="topbar-title" id="hist-name">—</div>
-      </div>
-    </div>
-    <div class="scroll-body" style="padding:0 20px;">
-      <div class="card" id="hist-list"></div>
-    </div>
-  </div>
-
-  <!-- ===== SCREEN: NEW USER ===== -->
-
-  <div class="screen" id="screen-newuser">
-    <div class="topbar">
-      <button class="back-btn" onclick="goScreen('users')">←</button>
-      <div>
-        <div class="topbar-sub">Add</div>
-        <div class="topbar-title">New Person</div>
-      </div>
-    </div>
-    <div class="scroll-body" style="padding:0 20px;">
-      <div class="user-preview">
-        <div class="prev-avatar" id="new-prev-avatar">🐷</div>
-        <div>
-          <div class="prev-name" id="new-prev-name">Name</div>
-          <div class="prev-bal">£0.00 balance</div>
+        <div class="input-wrap">
+          <label class="input-label">Password</label>
+          <input class="input" id="li-pw" type="password" placeholder="Enter password" autocomplete="current-password">
+          <button class="pw-toggle" onclick="togglePw('li-pw',this)">👁</button>
         </div>
-      </div>
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">Name</label>
-        <input class="input" id="new-name" type="text" placeholder="e.g. Emma" oninput="updateNewPreview()">
-      </div>
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">Choose Avatar</label>
-        <div class="avatar-grid" id="new-avatar-grid"></div>
-      </div>
-      <div class="card" style="margin-bottom:20px;">
-        <label class="input-label">Card Colour</label>
-        <div class="color-opts" id="new-color-opts"></div>
-      </div>
-      <button class="btn btn-green btn-full" onclick="createUser()">Create ✓</button>
-    </div>
-  </div>
-
-  <!-- ===== SCREEN: EDIT USER ===== -->
-
-  <div class="screen" id="screen-edituser">
-    <div class="topbar">
-      <button class="back-btn" onclick="goScreen('dash')">←</button>
-      <div>
-        <div class="topbar-sub">Editing</div>
-        <div class="topbar-title" id="edit-title">Person</div>
-      </div>
-    </div>
-    <div class="scroll-body" style="padding:0 20px;">
-      <div class="user-preview">
-        <div class="prev-avatar" id="edit-prev-avatar">🐷</div>
-        <div>
-          <div class="prev-name" id="edit-prev-name">Name</div>
-          <div class="prev-bal" id="edit-prev-bal">£0.00 balance</div>
+        <button class="btn btn-orange" style="margin-top:4px;" onclick="doLogin()">Log In</button>
+        <div style="text-align:right;margin-top:12px;">
+          <button class="btn-link" onclick="nav('s-reset')">Forgot password?</button>
         </div>
+        <div class="divider">or</div>
+        <button class="btn btn-ghost" onclick="nav('s-register')">Create an Account</button>
       </div>
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">Name</label>
-        <input class="input" id="edit-name" type="text" oninput="updateEditPreview()">
-      </div>
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">Choose Avatar</label>
-        <div class="avatar-grid" id="edit-avatar-grid"></div>
-      </div>
-      <div class="card" style="margin-bottom:14px;">
-        <label class="input-label">Card Colour</label>
-        <div class="color-opts" id="edit-color-opts"></div>
-      </div>
-      <button class="btn btn-green btn-full" style="margin-bottom:14px;" onclick="saveEditUser()">Save Changes ✓</button>
-      <button class="btn btn-ghost btn-full" style="color:#E05050;border-color:#FFD0D0;" onclick="deleteUser()">🗑 Remove Person</button>
     </div>
   </div>
 </div>
 
+<!-- ===== REGISTER ===== -->
+
+<div class="screen" id="s-register">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-login')">←</button>
+    <div><div class="topbar-sub">Getting started</div><div class="topbar-title">Create Account</div></div>
+  </div>
+  <div class="scroll-body" style="padding:0 20px;">
+    <div class="input-wrap">
+      <label class="input-label">Your Name</label>
+      <input class="input" id="reg-name" type="text" placeholder="e.g. Sarah" autocomplete="name">
+    </div>
+    <div class="input-wrap">
+      <label class="input-label">Username</label>
+      <input class="input" id="reg-user" type="text" placeholder="e.g. sarah123" autocomplete="username" autocapitalize="none">
+    </div>
+    <div class="input-wrap">
+      <label class="input-label">Email</label>
+      <input class="input" id="reg-email" type="email" placeholder="your@email.com" autocomplete="email">
+    </div>
+    <div class="input-wrap">
+      <label class="input-label">Password</label>
+      <input class="input" id="reg-pw" type="password" placeholder="At least 6 characters" autocomplete="new-password">
+      <button class="pw-toggle" onclick="togglePw('reg-pw',this)">👁</button>
+    </div>
+    <div class="input-wrap">
+      <label class="input-label">Confirm Password</label>
+      <input class="input" id="reg-pw2" type="password" placeholder="Repeat password" autocomplete="new-password">
+    </div>
+    <div class="card" style="margin-bottom:16px;background:#FFF9F0;border:2px solid #FFE4C8;">
+      <div class="input-label">Security Question (for password reset)</div>
+      <select class="input" id="reg-sq" style="padding:12px 18px;cursor:pointer;appearance:auto;">
+        <option value="">— Choose a question —</option>
+        <option>What was your first pet's name?</option>
+        <option>What is your mother's maiden name?</option>
+        <option>What town were you born in?</option>
+        <option>What was the name of your first school?</option>
+        <option>What is your favourite childhood film?</option>
+      </select>
+      <div style="margin-top:12px;">
+        <label class="input-label">Your Answer</label>
+        <input class="input" id="reg-sa" type="text" placeholder="Answer (not case sensitive)" autocomplete="off" autocapitalize="none">
+      </div>
+    </div>
+    <button class="btn btn-green" onclick="doRegister()">Create Account ✓</button>
+    <div class="auth-footer"><button class="btn-link" onclick="nav('s-login')">Already have an account? Log in</button></div>
+  </div>
+</div>
+
+<!-- ===== FORGOT PASSWORD ===== -->
+
+<div class="screen" id="s-reset">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-login')">←</button>
+    <div><div class="topbar-sub">Account</div><div class="topbar-title">Reset Password</div></div>
+  </div>
+  <div class="scroll-body" style="padding:0 20px;">
+    <div id="reset-step1">
+      <p style="color:var(--muted);font-size:14px;font-weight:600;margin-bottom:20px;line-height:1.6;">Enter your username and we'll ask your security question.</p>
+      <div class="input-wrap">
+        <label class="input-label">Username</label>
+        <input class="input" id="rs-user" type="text" placeholder="Your username" autocapitalize="none">
+      </div>
+      <button class="btn btn-orange" onclick="resetStep1()">Continue →</button>
+    </div>
+    <div id="reset-step2" style="display:none;">
+      <div class="card" style="margin-bottom:16px;background:#FFF9F0;border:2px solid #FFE4C8;">
+        <div class="input-label" style="margin-bottom:4px;">Security Question</div>
+        <p id="rs-question" style="font-weight:700;color:var(--text);font-size:15px;"></p>
+      </div>
+      <div class="input-wrap">
+        <label class="input-label">Your Answer</label>
+        <input class="input" id="rs-answer" type="text" placeholder="Your answer" autocapitalize="none">
+      </div>
+      <div class="input-wrap">
+        <label class="input-label">New Password</label>
+        <input class="input" id="rs-newpw" type="password" placeholder="New password">
+        <button class="pw-toggle" onclick="togglePw('rs-newpw',this)">👁</button>
+      </div>
+      <div class="input-wrap">
+        <label class="input-label">Confirm New Password</label>
+        <input class="input" id="rs-newpw2" type="password" placeholder="Repeat new password">
+      </div>
+      <button class="btn btn-green" onclick="resetStep2()">Reset Password ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== KIDS LIST ===== -->
+
+<div class="screen" id="s-kids">
+  <div class="app-logo">
+    <div class="app-logo-icon">🐷</div>
+    <div>
+      <div class="app-logo-text" id="kids-username">Pocket Money</div>
+      <div class="app-logo-sub">Who's saving today?</div>
+    </div>
+    <button class="app-logo-logout" onclick="doLogout()">Log out</button>
+  </div>
+  <div class="scroll-body" style="padding:0 20px 20px;">
+    <div class="user-grid" id="kids-grid"></div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+
+<div class="screen" id="s-dash">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-kids')">←</button>
+    <div><div class="topbar-sub">Savings</div><div class="topbar-title" id="dash-name">—</div></div>
+    <button class="btn btn-ghost btn-sm" onclick="openEditKid(currentKid)" style="margin-left:auto;">✏️</button>
+  </div>
+  <div class="scroll-body">
+    <div id="balance-hero" class="balance-hero">
+      <span class="hero-avatar" id="hero-av" onclick="bounceAv()">🐷</span>
+      <div class="hero-label">Balance</div>
+      <div class="hero-amount" id="hero-amt">£0.00</div>
+      <div class="hero-mood" id="hero-mood">Start saving! 💪</div>
+      <div class="hero-goal" id="hero-goal-wrap" style="display:none;">
+        <div class="hero-goal-label" id="hero-goal-label"></div>
+        <div class="hero-goal-bar"><div class="hero-goal-fill" id="hero-goal-fill"></div></div>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="action-btn add" onclick="nav('s-add')"><span class="aicon">💰</span>Add Money</button>
+      <button class="action-btn spend" onclick="nav('s-spend')"><span class="aicon">🛍️</span>Spend</button>
+    </div>
+    <div id="allowance-badge-wrap"></div>
+    <div class="stats-row" id="dash-stats"></div>
+    <div style="padding:0 20px;">
+      <div class="card">
+        <div class="section-head">
+          <div class="section-title">Recent</div>
+          <div class="see-all" id="see-all" style="display:none;" onclick="openHistory()">See all →</div>
+        </div>
+        <div id="dash-tx"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADD MONEY ===== -->
+
+<div class="screen" id="s-add">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-dash')">←</button>
+    <div><div class="topbar-sub">Adding to</div><div class="topbar-title" id="add-name">—</div></div>
+  </div>
+  <div class="scroll-body" style="padding:0 20px;">
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Amount (£)</label>
+      <input class="input big" id="add-amt" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">What for?</label>
+      <input class="input" id="add-lbl" type="text" placeholder="e.g. Birthday money">
+    </div>
+    <div style="margin-bottom:20px;">
+      <div class="input-label">Quick Add</div>
+      <div class="chips" id="earn-chips"></div>
+    </div>
+    <button class="btn btn-green" onclick="confirmAdd()">Add Money ✓</button>
+  </div>
+</div>
+
+<!-- ===== SPEND ===== -->
+
+<div class="screen" id="s-spend">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-dash')">←</button>
+    <div><div class="topbar-sub">Spending from</div><div class="topbar-title" id="spend-name">—</div></div>
+  </div>
+  <div class="scroll-body" style="padding:0 20px;">
+    <div style="text-align:center;margin-bottom:14px;">
+      <span style="font-size:13px;font-weight:700;color:var(--muted);">Balance: </span>
+      <span style="font-family:'Baloo 2';font-size:16px;font-weight:700;color:var(--orange);" id="spend-bal">£0.00</span>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Amount (£)</label>
+      <input class="input big" id="spend-amt" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">What did you buy?</label>
+      <input class="input" id="spend-lbl" type="text" placeholder="e.g. Sweets">
+    </div>
+    <div style="margin-bottom:20px;">
+      <div class="input-label">Quick Spend</div>
+      <div class="chips" id="spend-chips"></div>
+    </div>
+    <button class="btn btn-orange" onclick="confirmSpend()">Spend ✓</button>
+  </div>
+</div>
+
+<!-- ===== HISTORY ===== -->
+
+<div class="screen" id="s-hist">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-dash')">←</button>
+    <div><div class="topbar-sub" id="hist-sub">History</div><div class="topbar-title" id="hist-name">—</div></div>
+  </div>
+  <div class="scroll-body" style="padding:0 20px;">
+    <div class="card" id="hist-list"></div>
+  </div>
+</div>
+
+<!-- ===== ADD KID ===== -->
+
+<div class="screen" id="s-addkid">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-kids')">←</button>
+    <div><div class="topbar-sub">Add</div><div class="topbar-title">New Child</div></div>
+  </div>
+  <div class="scroll-body" style="padding:0 20px;">
+    <div class="prev-row">
+      <div class="pav" id="ak-prev-av">🐷</div>
+      <div><div class="pname" id="ak-prev-name">Name</div><div class="pbal">£0.00 balance</div></div>
+    </div>
+    <div class="input-wrap"><label class="input-label">Child's Name</label><input class="input" id="ak-name" type="text" placeholder="e.g. Emma" oninput="document.getElementById('ak-prev-name').textContent=this.value||'Name'"></div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Avatar</label>
+      <div class="avatar-grid" id="ak-av-grid"></div>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Card Colour</label>
+      <div class="col-opts" id="ak-col-opts"></div>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Savings Goal (optional)</label>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="font-size:18px;font-weight:800;color:var(--muted);">£</span>
+        <input class="input" id="ak-goal" type="number" min="0" step="1" placeholder="0.00" style="flex:1;" inputmode="decimal">
+      </div>
+      <div style="margin-top:8px;"><label class="input-label">Goal Label</label>
+      <input class="input" id="ak-goal-lbl" type="text" placeholder="e.g. New bike" style="margin-top:0;"></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;">
+      <label class="input-label">Weekly Allowance (optional)</label>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="font-size:18px;font-weight:800;color:var(--muted);">£</span>
+        <input class="input" id="ak-allow" type="number" min="0" step="0.5" placeholder="0.00" style="flex:1;" inputmode="decimal">
+      </div>
+    </div>
+    <button class="btn btn-green" onclick="createKid()">Add Child ✓</button>
+  </div>
+</div>
+
+<!-- ===== EDIT KID ===== -->
+
+<div class="screen" id="s-editkid">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-dash')">←</button>
+    <div><div class="topbar-sub">Editing</div><div class="topbar-title" id="ek-title">Child</div></div>
+  </div>
+  <div class="scroll-body" style="padding:0 20px;">
+    <div class="prev-row">
+      <div class="pav" id="ek-prev-av">🐷</div>
+      <div><div class="pname" id="ek-prev-name">Name</div><div class="pbal" id="ek-prev-bal">£0.00</div></div>
+    </div>
+    <div class="input-wrap"><label class="input-label">Name</label><input class="input" id="ek-name" type="text" oninput="document.getElementById('ek-prev-name').textContent=this.value||'Name'"></div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Avatar</label>
+      <div class="avatar-grid" id="ek-av-grid"></div>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Card Colour</label>
+      <div class="col-opts" id="ek-col-opts"></div>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Savings Goal</label>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="font-size:18px;font-weight:800;color:var(--muted);">£</span>
+        <input class="input" id="ek-goal" type="number" min="0" step="1" placeholder="0.00" style="flex:1;" inputmode="decimal">
+      </div>
+      <div style="margin-top:8px;"><label class="input-label">Goal Label</label>
+      <input class="input" id="ek-goal-lbl" type="text" placeholder="e.g. New bike"></div>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Weekly Allowance (£)</label>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="font-size:18px;font-weight:800;color:var(--muted);">£</span>
+        <input class="input" id="ek-allow" type="number" min="0" step="0.5" placeholder="0.00" style="flex:1;" inputmode="decimal">
+      </div>
+    </div>
+    <button class="btn btn-green" style="margin-bottom:12px;" onclick="saveEditKid()">Save Changes ✓</button>
+    <button class="btn btn-ghost" style="color:#E05050;border-color:#FFD0D0;" onclick="deleteKid()">🗑 Remove Child</button>
+  </div>
+</div>
+
+<!-- ===== ACCOUNT SETTINGS ===== -->
+
+<div class="screen" id="s-account">
+  <div class="topbar">
+    <button class="back-btn" onclick="nav('s-kids')">←</button>
+    <div><div class="topbar-sub">Your</div><div class="topbar-title">Account</div></div>
+  </div>
+  <div class="scroll-body" style="padding:0 20px;">
+    <div class="card" style="margin-bottom:14px;">
+      <label class="input-label">Display Name</label>
+      <input class="input" id="acc-name" type="text">
+      <button class="btn btn-green" style="margin-top:12px;" onclick="saveAccName()">Save Name</button>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <div class="section-title" style="margin-bottom:16px;">Change Password</div>
+      <div class="input-wrap"><label class="input-label">Current Password</label><input class="input" id="acc-cur-pw" type="password" placeholder="Current password"></div>
+      <div class="input-wrap"><label class="input-label">New Password</label><input class="input" id="acc-new-pw" type="password" placeholder="New password"></div>
+      <div class="input-wrap" style="margin-bottom:0;"><label class="input-label">Confirm New</label><input class="input" id="acc-new-pw2" type="password" placeholder="Repeat new password"></div>
+      <button class="btn btn-orange" style="margin-top:14px;" onclick="changePassword()">Change Password</button>
+    </div>
+    <div class="card" style="border:2px solid #FFD0D0;">
+      <div class="section-title" style="color:#E05050;margin-bottom:8px;">Danger Zone</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:600;">Delete account and all children's data permanently.</p>
+      <button class="btn btn-red" onclick="deleteAccount()">Delete My Account</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
 <script>
 // ============================================================
-// DATA
+// CONSTANTS
 // ============================================================
-const AVATARS = ['🐷','🐻','🐼','🦊','🐨','🐯','🦁','🐸','🐧','🦋','🦄','🐶','🐱','🐭','🐹','🐰','🐮','🐔','🐺','🦝','🦙','🐤','🦔','🐲','🐛','🐌','🐜','🐝','🪲','🐞','🦗','🪳','🕷️','🦂','🪰','🪱','🦟','🪄'];
+const AVATARS = ['🐷','🐻','🐼','🦊','🐨','🐯','🦁','🐸','🐧','🦋','🦄','🐶','🐱','🐭','🐹','🐰','🐮','🐔','🐺','🦝','🦙','🐤','🦔','🐲','🐛','🐌','🐜','🐝','🪲','🐞','🦗','🪳','🕷️','🦂','🪰','🪱','🦟'];
 const COLORS = [
-  { id: 0, bg: ['#FF8C5A', '#E8724A'], label: 'Coral' },
-  { id: 1, bg: ['#5DBE8A', '#4AAD7A'], label: 'Mint' },
-  { id: 2, bg: ['#5B9EFF', '#4A8AEE'], label: 'Sky' },
-  { id: 3, bg: ['#FFD166', '#EAB830'], label: 'Sun' },
-  { id: 4, bg: ['#FF8BB5', '#EE6A9A'], label: 'Rose' },
-  { id: 5, bg: ['#A07AEE', '#8A5ADC'], label: 'Purple' },
+  {id:0,bg:['#FF8C5A','#E8724A']},
+  {id:1,bg:['#5DBE8A','#4AAD7A']},
+  {id:2,bg:['#5B9EFF','#4A8AEE']},
+  {id:3,bg:['#FFD166','#EAB830']},
+  {id:4,bg:['#FF8BB5','#EE6A9A']},
+  {id:5,bg:['#A07AEE','#8A5ADC']},
 ];
+const EARN_Q = [{label:'🧹 Chores',amt:2},{label:'⭐ Good Work',amt:5},{label:'🎂 Birthday',amt:10},{label:'🎁 Gift',amt:20},{label:'🚗 Car Wash',amt:3},{label:'📚 Reading',amt:1}];
+const SPEND_Q = [{label:'🍬 Sweets',amt:0.5},{label:'📚 Book',amt:3},{label:'🎮 Game',amt:5},{label:'🧸 Toy',amt:8},{label:'🎪 Day Out',amt:10},{label:'🍕 Treat',amt:4}];
 
-const EARN_SUGGESTIONS = [
-  { label: '🧹 Chores', amount: 2 },
-  { label: '⭐ Good Work', amount: 5 },
-  { label: '🎂 Birthday', amount: 10 },
-  { label: '🎁 Gift', amount: 20 },
-  { label: '🚗 Car Wash', amount: 3 },
-  { label: '📚 Reading', amount: 1 },
-];
-const SPEND_SUGGESTIONS = [
-  { label: '🍬 Sweets', amount: 0.5 },
-  { label: '📚 Book', amount: 3 },
-  { label: '🎮 Game', amount: 5 },
-  { label: '🧸 Toy', amount: 8 },
-  { label: '🎪 Day Out', amount: 10 },
-  { label: '🍕 Treat', amount: 4 },
-];
+// ============================================================
+// STATE
+// ============================================================
+let currentScreen = 's-login';
+let session = null; // current username
+let currentKid = null;
+let akAv = '🐷', akCol = 0;
+let ekAv = '🐷', ekCol = 0;
+let resetUsername = null;
 
-let db = JSON.parse(localStorage.getItem('pocketmoney_v2') || '{"users":[]}');
-let currentUser = null;
-let currentScreen = 'users';
+// ============================================================
+// STORAGE
+// ============================================================
+function loadDB() {
+  try { return JSON.parse(localStorage.getItem('pmv3') || '{"accounts":{}}'); }
+  catch { return {accounts:{}}; }
+}
+function saveDB(db) { localStorage.setItem('pmv3', JSON.stringify(db)); }
+function loadSession() { return localStorage.getItem('pmv3_session') || null; }
+function saveSession(u) { if(u) localStorage.setItem('pmv3_session',u); else localStorage.removeItem('pmv3_session'); }
 
-// new user state
-let newAvatarSel = '🐷', newColorSel = 0;
-let editAvatarSel = '🐷', editColorSel = 0;
-
-function save() { localStorage.setItem('pocketmoney_v2', JSON.stringify(db)); }
-function fmt(n) { return '£' + Math.abs(n).toFixed(2); }
-function fmtDate(iso) {
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+// ============================================================
+// CRYPTO (SHA-256 via Web Crypto)
+// ============================================================
+async function hash(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str.toLowerCase().trim()));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
 // ============================================================
-// SCREENS
+// NAVIGATION
 // ============================================================
-function goScreen(name) {
-  const leaving = document.getElementById('screen-' + currentScreen);
-  const entering = document.getElementById('screen-' + name);
-  if (!entering || name === currentScreen) return;
-
-  if (name === 'history') renderHistory();
-
-  const goingBack = ['users', 'dash'].includes(name);
+function nav(name) {
+  if (name === currentScreen) return;
+  const leaving = document.getElementById(currentScreen);
+  const entering = document.getElementById(name);
+  if (!entering) return;
+  const goBack = ['s-login','s-kids','s-dash'].includes(name);
   leaving.classList.remove('active');
-  if (goingBack) {
-    leaving.classList.add('slide-left');
-    setTimeout(() => leaving.classList.remove('slide-left'), 300);
-  }
-
-  entering.style.transform = goingBack ? 'translateX(-30px)' : 'translateX(30px)';
-  entering.style.opacity = '0';
+  if (!goBack) leaving.classList.add('exit-left');
+  setTimeout(() => leaving.classList.remove('exit-left'), 300);
+  entering.style.cssText = `transform:translateX(${goBack?'-30px':'30px'});opacity:0;`;
   entering.classList.add('active');
   entering.style.transition = 'none';
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      entering.style.transition = '';
-      entering.style.transform = '';
-      entering.style.opacity = '';
-    });
-  });
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    entering.style.transition = '';
+    entering.style.transform = '';
+    entering.style.opacity = '';
+  }));
   currentScreen = name;
 }
 
 // ============================================================
 // TOAST
 // ============================================================
-let toastTimer;
-function toast(msg, err = false) {
+let toastT;
+function showToast(msg, err=false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
-  el.className = err ? 'error show' : 'show';
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+  el.className = err ? 'err show' : 'show';
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.className = '', 2800);
 }
 
 // ============================================================
-// USERS SCREEN
+// PASSWORD TOGGLE
 // ============================================================
-function renderUsers() {
-  const grid = document.getElementById('user-grid');
+function togglePw(id, btn) {
+  const el = document.getElementById(id);
+  const show = el.type === 'password';
+  el.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+}
+
+// ============================================================
+// AUTH: REGISTER
+// ============================================================
+async function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const username = document.getElementById('reg-user').value.trim().toLowerCase();
+  const email = document.getElementById('reg-email').value.trim().toLowerCase();
+  const pw = document.getElementById('reg-pw').value;
+  const pw2 = document.getElementById('reg-pw2').value;
+  const sq = document.getElementById('reg-sq').value;
+  const sa = document.getElementById('reg-sa').value.trim();
+  if (!name||!username||!email||!pw||!sq||!sa) { showToast('Please fill in all fields',true); return; }
+  if (username.length < 3) { showToast('Username must be 3+ characters',true); return; }
+  if (!/^[a-z0-9_]+$/.test(username)) { showToast('Username: letters, numbers and _ only',true); return; }
+  if (pw.length < 6) { showToast('Password must be 6+ characters',true); return; }
+  if (pw !== pw2) { showToast('Passwords do not match',true); return; }
+  const db = loadDB();
+  if (db.accounts[username]) { showToast('Username already taken',true); return; }
+  const pwHash = await hash(pw);
+  const saHash = await hash(sa);
+  db.accounts[username] = {name, email, pwHash, securityQuestion:sq, securityAnswerHash:saHash, kids:[], createdAt:new Date().toISOString()};
+  saveDB(db);
+  showToast(`Welcome, ${name}! 🎉`);
+  ['reg-name','reg-user','reg-email','reg-pw','reg-pw2','reg-sa'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('reg-sq').value='';
+  session = username;
+  saveSession(username);
+  renderKids();
+  nav('s-kids');
+}
+
+// ============================================================
+// AUTH: LOGIN
+// ============================================================
+async function doLogin() {
+  const u = document.getElementById('li-user').value.trim().toLowerCase();
+  const pw = document.getElementById('li-pw').value;
+  if (!u||!pw) { showToast('Enter username and password',true); return; }
+  const db = loadDB();
+  // allow login by email too
+  let username = u;
+  if (!db.accounts[u]) {
+    username = Object.keys(db.accounts).find(k => db.accounts[k].email === u);
+  }
+  if (!username || !db.accounts[username]) { showToast('Account not found',true); return; }
+  const pwHash = await hash(pw);
+  if (db.accounts[username].pwHash !== pwHash) { showToast('Incorrect password',true); return; }
+  session = username;
+  saveSession(username);
+  document.getElementById('li-pw').value = '';
+  renderKids();
+  nav('s-kids');
+}
+
+// ============================================================
+// AUTH: FORGOT PASSWORD
+// ============================================================
+async function resetStep1() {
+  const u = document.getElementById('rs-user').value.trim().toLowerCase();
+  if (!u) { showToast('Enter your username',true); return; }
+  const db = loadDB();
+  if (!db.accounts[u]) { showToast('Username not found',true); return; }
+  resetUsername = u;
+  document.getElementById('rs-question').textContent = db.accounts[u].securityQuestion;
+  document.getElementById('reset-step1').style.display = 'none';
+  document.getElementById('reset-step2').style.display = 'block';
+}
+
+async function resetStep2() {
+  const answer = document.getElementById('rs-answer').value.trim();
+  const newpw = document.getElementById('rs-newpw').value;
+  const newpw2 = document.getElementById('rs-newpw2').value;
+  if (!answer||!newpw) { showToast('Fill in all fields',true); return; }
+  if (newpw.length < 6) { showToast('Password must be 6+ characters',true); return; }
+  if (newpw !== newpw2) { showToast('Passwords do not match',true); return; }
+  const db = loadDB();
+  const ansHash = await hash(answer);
+  if (db.accounts[resetUsername].securityAnswerHash !== ansHash) { showToast('Incorrect answer',true); return; }
+  db.accounts[resetUsername].pwHash = await hash(newpw);
+  saveDB(db);
+  showToast('Password reset! Please log in ✓');
+  document.getElementById('reset-step1').style.display = 'block';
+  document.getElementById('reset-step2').style.display = 'none';
+  ['rs-user','rs-answer','rs-newpw','rs-newpw2'].forEach(id=>document.getElementById(id).value='');
+  resetUsername = null;
+  nav('s-login');
+}
+
+// ============================================================
+// AUTH: LOGOUT
+// ============================================================
+function doLogout() {
+  session = null;
+  saveSession(null);
+  currentKid = null;
+  nav('s-login');
+  showToast('Logged out 👋');
+}
+
+// ============================================================
+// ACCOUNT SETTINGS
+// ============================================================
+function openAccount() {
+  const db = loadDB();
+  document.getElementById('acc-name').value = db.accounts[session].name;
+  nav('s-account');
+}
+function saveAccName() {
+  const name = document.getElementById('acc-name').value.trim();
+  if (!name) { showToast('Enter a name',true); return; }
+  const db = loadDB();
+  db.accounts[session].name = name;
+  saveDB(db);
+  renderKids();
+  showToast('Name saved ✓');
+}
+async function changePassword() {
+  const cur = document.getElementById('acc-cur-pw').value;
+  const np = document.getElementById('acc-new-pw').value;
+  const np2 = document.getElementById('acc-new-pw2').value;
+  if (!cur||!np) { showToast('Fill in all fields',true); return; }
+  if (np.length < 6) { showToast('Password must be 6+ characters',true); return; }
+  if (np !== np2) { showToast('Passwords do not match',true); return; }
+  const db = loadDB();
+  const curHash = await hash(cur);
+  if (db.accounts[session].pwHash !== curHash) { showToast('Current password incorrect',true); return; }
+  db.accounts[session].pwHash = await hash(np);
+  saveDB(db);
+  ['acc-cur-pw','acc-new-pw','acc-new-pw2'].forEach(id=>document.getElementById(id).value='');
+  showToast('Password changed ✓');
+}
+function deleteAccount() {
+  if (!confirm('Delete your account and ALL children\'s data? This cannot be undone.')) return;
+  const db = loadDB();
+  delete db.accounts[session];
+  saveDB(db);
+  doLogout();
+  showToast('Account deleted');
+}
+
+// ============================================================
+// KIDS GRID
+// ============================================================
+function renderKids() {
+  const db = loadDB();
+  const acc = db.accounts[session];
+  if (!acc) return;
+  document.getElementById('kids-username').textContent = acc.name || session;
+  checkAllowances(acc, db);
+  const grid = document.getElementById('kids-grid');
   grid.innerHTML = '';
-  db.users.forEach((u, i) => {
-    const total = u.transactions ? u.transactions.length : 0;
+  (acc.kids||[]).forEach((k,i) => {
+    const pct = k.goalAmt ? Math.min(100, Math.round((k.balance||0)/k.goalAmt*100)) : 0;
     const div = document.createElement('div');
-    div.className = `user-card color-${u.color ?? i % 6}`;
+    div.className = `user-card c${k.color??i%6}`;
     div.innerHTML = `
-      <div class="edit-btn" onclick="event.stopPropagation(); openEditFromUsers(${i})">✏️</div>
-      <div class="avatar">${u.avatar || '🐷'}</div>
-      <div class="user-name">${u.name}</div>
-      <div class="user-balance">${fmt(u.balance || 0)}</div>
+      <div class="edit-btn" onclick="event.stopPropagation();openEditKid(${i})">✏️</div>
+      <div class="uavatar">${k.avatar||'🐷'}</div>
+      <div class="uname">${k.name}</div>
+      <div class="ubal">${fmt(k.balance||0)}</div>
+      ${k.goalAmt ? `<div class="ugoal">${k.goalLabel||'Goal'}: ${pct}%</div><div class="goal-bar-wrap"><div class="goal-bar" style="width:${pct}%"></div></div>` : ''}
     `;
-    div.addEventListener('click', () => openUser(i));
+    div.addEventListener('click', () => openKid(i));
     grid.appendChild(div);
   });
-  // Add button
-  const add = document.createElement('div');
-  add.className = 'add-user-card';
-  add.innerHTML = `<div class="plus">＋</div><span>Add Person</span>`;
-  add.onclick = () => openNewUser();
-  grid.appendChild(add);
+  const addBtn = document.createElement('div');
+  addBtn.className = 'add-kid-card';
+  addBtn.innerHTML = `<div class="plus">＋</div><span>Add Child</span>`;
+  addBtn.onclick = () => openAddKid();
+  grid.appendChild(addBtn);
 }
 
 // ============================================================
-// OPEN USER / DASHBOARD
+// ALLOWANCE AUTO-ADD
 // ============================================================
-function openUser(idx) {
-  currentUser = idx;
+function checkAllowances(acc, db) {
+  if (!acc.kids) return;
+  let changed = false;
+  const now = new Date();
+  acc.kids.forEach(k => {
+    if (!k.allowance || !k.allowance.amount) return;
+    const lastAdded = k.allowance.lastAdded ? new Date(k.allowance.lastAdded) : null;
+    if (!lastAdded) { k.allowance.lastAdded = now.toISOString(); changed = true; return; }
+    const daysSince = (now - lastAdded) / (1000*60*60*24);
+    if (daysSince >= 7) {
+      const weeksOwed = Math.floor(daysSince / 7);
+      const total = weeksOwed * k.allowance.amount;
+      k.balance = (k.balance||0) + total;
+      if (!k.transactions) k.transactions = [];
+      k.transactions.unshift({id:Date.now(),type:'add',amount:total,label:`Weekly allowance x${weeksOwed}`,date:now.toISOString()});
+      k.allowance.lastAdded = new Date(lastAdded.getTime() + weeksOwed*7*24*60*60*1000).toISOString();
+      changed = true;
+    }
+  });
+  if (changed) saveDB(db);
+}
+
+// ============================================================
+// OPEN KID / DASHBOARD
+// ============================================================
+function openKid(idx) {
+  currentKid = idx;
   renderDash();
-  goScreen('dash');
+  nav('s-dash');
 }
 
 function renderDash() {
-  const u = db.users[currentUser];
-  if (!u) return;
-  document.getElementById('dash-name').textContent = u.name;
-  document.getElementById('add-name').textContent = u.name;
-  document.getElementById('spend-name').textContent = u.name;
-  document.getElementById('hist-name').textContent = u.name;
-
-  const avatar = document.getElementById('dash-avatar');
-  avatar.textContent = u.avatar || '🐷';
-
-  const bal = u.balance || 0;
-  document.getElementById('dash-balance').textContent = fmt(bal);
-  document.getElementById('spend-bal-display').textContent = fmt(bal);
-
-  // mood
+  const db = loadDB();
+  const acc = db.accounts[session];
+  const k = acc.kids[currentKid];
+  if (!k) return;
+  document.getElementById('dash-name').textContent = k.name;
+  document.getElementById('add-name').textContent = k.name;
+  document.getElementById('spend-name').textContent = k.name;
+  document.getElementById('hist-name').textContent = k.name;
+  document.getElementById('hero-av').textContent = k.avatar||'🐷';
+  const bal = k.balance||0;
+  document.getElementById('hero-amt').textContent = fmt(bal);
+  document.getElementById('spend-bal').textContent = fmt(bal);
   let mood = 'Start saving! 💪';
-  if (bal >= 50) mood = 'Amazing savings! 🌟';
-  else if (bal >= 20) mood = 'Great job saving! ⭐';
-  else if (bal >= 5) mood = 'Keep going! 😊';
-  else if (bal > 0) mood = 'You\'ve started! 🌱';
-  document.getElementById('dash-mood').textContent = mood;
-
-  // balance card gradient
-  const c = COLORS[u.color ?? 0];
-  document.getElementById('balance-card').style.background = `linear-gradient(135deg, ${c.bg[0]}, ${c.bg[1]})`;
-
+  if (bal>=50) mood='Amazing savings! 🌟'; else if(bal>=20) mood='Great job! ⭐'; else if(bal>=5) mood='Keep going! 😊'; else if(bal>0) mood="You've started! 🌱";
+  document.getElementById('hero-mood').textContent = mood;
+  const c = COLORS[k.color??0];
+  document.getElementById('balance-hero').style.background = `linear-gradient(135deg,${c.bg[0]},${c.bg[1]})`;
+  // goal
+  const gw = document.getElementById('hero-goal-wrap');
+  if (k.goalAmt) {
+    const pct = Math.min(100, Math.round(bal/k.goalAmt*100));
+    document.getElementById('hero-goal-label').textContent = `${k.goalLabel||'Goal'}: ${fmt(bal)} / ${fmt(k.goalAmt)} (${pct}%)`;
+    document.getElementById('hero-goal-fill').style.width = pct+'%';
+    gw.style.display='block';
+  } else { gw.style.display='none'; }
+  // allowance badge
+  const abw = document.getElementById('allowance-badge-wrap');
+  if (k.allowance && k.allowance.amount) {
+    const next = k.allowance.lastAdded ? new Date(new Date(k.allowance.lastAdded).getTime()+7*24*60*60*1000) : null;
+    const daysLeft = next ? Math.max(0, Math.ceil((next-new Date())/(1000*60*60*24))) : null;
+    abw.innerHTML = `<div class="allowance-badge"><span class="ab-icon">🗓</span><div><div class="ab-text">Weekly allowance: ${fmt(k.allowance.amount)}</div><div class="ab-sub">${daysLeft!==null?`Next in ${daysLeft} day${daysLeft!==1?'s':''}`:''}</div></div></div>`;
+  } else { abw.innerHTML=''; }
   // stats
-  const earned = (u.transactions || []).filter(t => t.type === 'add').reduce((a, t) => a + t.amount, 0);
-  const spent = (u.transactions || []).filter(t => t.type === 'spend').reduce((a, t) => a + t.amount, 0);
+  const txs = k.transactions||[];
+  const earned = txs.filter(t=>t.type==='add').reduce((a,t)=>a+t.amount,0);
+  const spent = txs.filter(t=>t.type==='spend').reduce((a,t)=>a+t.amount,0);
   document.getElementById('dash-stats').innerHTML = `
-    <div class="stat-card earned"><div class="stat-val">${fmt(earned)}</div><div class="stat-lbl">Total Earned</div></div>
-    <div class="stat-card spent"><div class="stat-val">${fmt(spent)}</div><div class="stat-lbl">Total Spent</div></div>
-  `;
-
-  // recent tx
-  const txs = (u.transactions || []).slice(0, 5);
+    <div class="stat-card e"><div class="sv">${fmt(earned)}</div><div class="sl">Total Earned</div></div>
+    <div class="stat-card s"><div class="sv">${fmt(spent)}</div><div class="sl">Total Spent</div></div>`;
+  // recent
+  const recent = txs.slice(0,5);
+  const seeAll = document.getElementById('see-all');
   const container = document.getElementById('dash-tx');
-  const seeAll = document.getElementById('see-all-btn');
-  if (txs.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🪙</div><p>No transactions yet!</p></div>`;
-    seeAll.style.display = 'none';
-  } else {
-    seeAll.style.display = (u.transactions || []).length > 5 ? 'block' : 'none';
-    container.innerHTML = txs.map(tx => txRow(tx)).join('');
-  }
+  seeAll.style.display = txs.length>5 ? 'block' : 'none';
+  container.innerHTML = recent.length ? recent.map(txRow).join('') : `<div class="empty"><div class="empty-icon">🪙</div><p>No transactions yet!</p></div>`;
 }
 
 function txRow(tx) {
   return `<div class="tx-row">
-    <div class="tx-icon ${tx.type}">${tx.type === 'add' ? '💰' : '🛍️'}</div>
-    <div class="tx-info">
-      <div class="tx-desc">${tx.label}</div>
-      <div class="tx-date">${fmtDate(tx.date)}</div>
-    </div>
-    <div class="tx-amount ${tx.type}">${tx.type === 'add' ? '+' : '-'}${fmt(tx.amount)}</div>
+    <div class="tx-icon ${tx.type}">${tx.type==='add'?'💰':'🛍️'}</div>
+    <div class="tx-info"><div class="tx-desc">${tx.label}</div><div class="tx-date">${fmtDate(tx.date)}</div></div>
+    <div class="tx-amt ${tx.type}">${tx.type==='add'?'+':'-'}${fmt(tx.amount)}</div>
     <button class="tx-del" onclick="deleteTx(${tx.id})">✕</button>
   </div>`;
 }
 
-function bouncePig() {
-  const el = document.getElementById('dash-avatar');
-  el.style.animation = 'none';
-  el.style.transition = 'none';
-  el.offsetHeight;
-  el.style.animation = 'bouncePig 0.5s ease';
-  setTimeout(() => el.style.animation = '', 500);
+function openHistory() {
+  const db = loadDB();
+  const k = db.accounts[session].kids[currentKid];
+  const txs = k.transactions||[];
+  document.getElementById('hist-sub').textContent = `${txs.length} transaction${txs.length!==1?'s':''}`;
+  document.getElementById('hist-list').innerHTML = txs.length ? txs.map(txRow).join('') : `<div class="empty"><div class="empty-icon">📋</div><p>No transactions</p></div>`;
+  nav('s-hist');
+}
+
+function bounceAv() {
+  const el = document.getElementById('hero-av');
+  el.style.animation='none'; el.offsetHeight;
+  el.style.animation='pigBounce .5s ease';
+  setTimeout(()=>el.style.animation='',500);
 }
 
 // ============================================================
 // ADD / SPEND
 // ============================================================
-function buildChips() {
-  document.getElementById('earn-chips').innerHTML = EARN_SUGGESTIONS.map(s =>
-    `<div class="chip green" onclick="quickAdd(${s.amount},'${s.label}')">${s.label} <b>+${fmt(s.amount)}</b></div>`
-  ).join('');
-  document.getElementById('spend-chips').innerHTML = SPEND_SUGGESTIONS.map(s =>
-    `<div class="chip red" onclick="quickSpend(${s.amount},'${s.label}')">${s.label} <b>${fmt(s.amount)}</b></div>`
-  ).join('');
-}
-
-function quickAdd(amt, lbl) {
-  document.getElementById('add-amount').value = amt;
-  document.getElementById('add-label').value = lbl;
-}
-function quickSpend(amt, lbl) {
-  document.getElementById('spend-amount').value = amt;
-  document.getElementById('spend-label').value = lbl;
-}
-
 function confirmAdd() {
-  const amt = parseFloat(document.getElementById('add-amount').value);
-  const lbl = document.getElementById('add-label').value.trim() || 'Added money';
-  if (!amt || amt <= 0) { toast('Enter a valid amount', true); return; }
-  const u = db.users[currentUser];
-  if (!u.transactions) u.transactions = [];
-  u.balance = (u.balance || 0) + amt;
-  u.transactions.unshift({ id: Date.now(), type: 'add', amount: amt, label: lbl, date: new Date().toISOString() });
-  save();
-  toast(`+${fmt(amt)} added! 🎉`);
-  document.getElementById('add-amount').value = '';
-  document.getElementById('add-label').value = '';
-  renderDash();
-  goScreen('dash');
+  const amt = parseFloat(document.getElementById('add-amt').value);
+  const lbl = document.getElementById('add-lbl').value.trim()||'Added money';
+  if (!amt||amt<=0) { showToast('Enter a valid amount',true); return; }
+  const db = loadDB();
+  const k = db.accounts[session].kids[currentKid];
+  if (!k.transactions) k.transactions=[];
+  k.balance=(k.balance||0)+amt;
+  k.transactions.unshift({id:Date.now(),type:'add',amount:amt,label:lbl,date:new Date().toISOString()});
+  saveDB(db);
+  document.getElementById('add-amt').value=''; document.getElementById('add-lbl').value='';
+  showToast(`+${fmt(amt)} added! 🎉`);
+  renderDash(); renderKids(); nav('s-dash');
 }
 
 function confirmSpend() {
-  const amt = parseFloat(document.getElementById('spend-amount').value);
-  const lbl = document.getElementById('spend-label').value.trim() || 'Spent money';
-  if (!amt || amt <= 0) { toast('Enter a valid amount', true); return; }
-  const u = db.users[currentUser];
-  if (amt > (u.balance || 0)) { toast('Not enough money! 😢', true); return; }
-  if (!u.transactions) u.transactions = [];
-  u.balance = (u.balance || 0) - amt;
-  u.transactions.unshift({ id: Date.now(), type: 'spend', amount: amt, label: lbl, date: new Date().toISOString() });
-  save();
-  toast(`-${fmt(amt)} spent 🛍️`);
-  document.getElementById('spend-amount').value = '';
-  document.getElementById('spend-label').value = '';
-  renderDash();
-  goScreen('dash');
+  const amt = parseFloat(document.getElementById('spend-amt').value);
+  const lbl = document.getElementById('spend-lbl').value.trim()||'Spent money';
+  if (!amt||amt<=0) { showToast('Enter a valid amount',true); return; }
+  const db = loadDB();
+  const k = db.accounts[session].kids[currentKid];
+  if (amt>(k.balance||0)) { showToast('Not enough money! 😢',true); return; }
+  if (!k.transactions) k.transactions=[];
+  k.balance=(k.balance||0)-amt;
+  k.transactions.unshift({id:Date.now(),type:'spend',amount:amt,label:lbl,date:new Date().toISOString()});
+  saveDB(db);
+  document.getElementById('spend-amt').value=''; document.getElementById('spend-lbl').value='';
+  showToast(`-${fmt(amt)} spent 🛍️`);
+  renderDash(); renderKids(); nav('s-dash');
 }
 
 function deleteTx(id) {
-  const u = db.users[currentUser];
-  const tx = u.transactions.find(t => t.id === id);
+  const db = loadDB();
+  const k = db.accounts[session].kids[currentKid];
+  const tx = k.transactions.find(t=>t.id===id);
   if (!tx) return;
-  u.balance = (u.balance || 0) + (tx.type === 'add' ? -tx.amount : tx.amount);
-  u.transactions = u.transactions.filter(t => t.id !== id);
-  save(); renderDash();
-  if (currentScreen === 'history') renderHistory();
-  toast('Removed');
+  k.balance=(k.balance||0)+(tx.type==='add'?-tx.amount:tx.amount);
+  k.transactions=k.transactions.filter(t=>t.id!==id);
+  saveDB(db); renderDash(); renderKids();
+  if (currentScreen==='s-hist') openHistory();
+  showToast('Removed');
 }
 
 // ============================================================
-// HISTORY
+// ADD KID
 // ============================================================
-function renderHistory() {
-  const u = db.users[currentUser];
-  if (!u) return;
-  const txs = u.transactions || [];
-  document.getElementById('hist-sub').textContent = `${txs.length} transaction${txs.length !== 1 ? 's' : ''}`;
-  const el = document.getElementById('hist-list');
-  if (txs.length === 0) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><p>No transactions</p></div>`;
-  } else {
-    el.innerHTML = txs.map(tx => txRow(tx)).join('');
-  }
+function openAddKid() {
+  akAv='🐷'; akCol=0;
+  ['ak-name','ak-goal','ak-goal-lbl','ak-allow'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ak-prev-name').textContent='Name';
+  document.getElementById('ak-prev-av').textContent='🐷';
+  buildAvGrid('ak-av-grid','ak',akAv);
+  buildColOpts('ak-col-opts','ak',akCol);
+  nav('s-addkid');
+}
+
+function createKid() {
+  const name = document.getElementById('ak-name').value.trim();
+  if (!name) { showToast('Enter a name',true); return; }
+  const goalAmt = parseFloat(document.getElementById('ak-goal').value)||0;
+  const goalLabel = document.getElementById('ak-goal-lbl').value.trim();
+  const allowAmt = parseFloat(document.getElementById('ak-allow').value)||0;
+  const db = loadDB();
+  const acc = db.accounts[session];
+  acc.kids.push({
+    name, avatar:akAv, color:akCol, balance:0, transactions:[],
+    goalAmt: goalAmt||null, goalLabel: goalLabel||null,
+    allowance: allowAmt ? {amount:allowAmt, lastAdded:new Date().toISOString()} : null
+  });
+  saveDB(db);
+  renderKids(); nav('s-kids');
+  showToast(`${name} added! 🎉`);
 }
 
 // ============================================================
-// NEW USER
+// EDIT KID
 // ============================================================
-function openNewUser() {
-  newAvatarSel = '🐷'; newColorSel = 0;
-  document.getElementById('new-name').value = '';
-  document.getElementById('new-prev-name').textContent = 'Name';
-  document.getElementById('new-prev-avatar').textContent = '🐷';
-  buildAvatarGrid('new-avatar-grid', 'new', AVATARS, newAvatarSel);
-  buildColorOpts('new-color-opts', 'new', newColorSel);
-  goScreen('newuser');
+function openEditKid(idx) {
+  currentKid = idx;
+  const db = loadDB();
+  const k = db.accounts[session].kids[idx];
+  ekAv = k.avatar||'🐷'; ekCol = k.color??0;
+  document.getElementById('ek-title').textContent = k.name;
+  document.getElementById('ek-name').value = k.name;
+  document.getElementById('ek-prev-name').textContent = k.name;
+  document.getElementById('ek-prev-av').textContent = ekAv;
+  document.getElementById('ek-prev-bal').textContent = fmt(k.balance||0)+' balance';
+  document.getElementById('ek-goal').value = k.goalAmt||'';
+  document.getElementById('ek-goal-lbl').value = k.goalLabel||'';
+  document.getElementById('ek-allow').value = k.allowance?.amount||'';
+  buildAvGrid('ek-av-grid','ek',ekAv);
+  buildColOpts('ek-col-opts','ek',ekCol);
+  nav('s-editkid');
 }
 
-function updateNewPreview() {
-  const n = document.getElementById('new-name').value || 'Name';
-  document.getElementById('new-prev-name').textContent = n;
+function saveEditKid() {
+  const name = document.getElementById('ek-name').value.trim();
+  if (!name) { showToast('Enter a name',true); return; }
+  const goalAmt = parseFloat(document.getElementById('ek-goal').value)||0;
+  const goalLabel = document.getElementById('ek-goal-lbl').value.trim();
+  const allowAmt = parseFloat(document.getElementById('ek-allow').value)||0;
+  const db = loadDB();
+  const k = db.accounts[session].kids[currentKid];
+  k.name=name; k.avatar=ekAv; k.color=ekCol;
+  k.goalAmt=goalAmt||null; k.goalLabel=goalLabel||null;
+  if (allowAmt) {
+    if (!k.allowance) k.allowance={amount:allowAmt,lastAdded:new Date().toISOString()};
+    else k.allowance.amount=allowAmt;
+  } else { k.allowance=null; }
+  saveDB(db);
+  renderDash(); renderKids();
+  showToast('Saved ✓'); nav('s-dash');
 }
 
-function buildAvatarGrid(elId, prefix, avatars, selected) {
-  document.getElementById(elId).innerHTML = avatars.map(a =>
-    `<div class="avatar-opt ${a === selected ? 'selected' : ''}" onclick="selectAvatar('${prefix}','${a}')">${a}</div>`
+function deleteKid() {
+  const db = loadDB();
+  const name = db.accounts[session].kids[currentKid].name;
+  if (!confirm(`Remove ${name}? All their data will be deleted.`)) return;
+  db.accounts[session].kids.splice(currentKid,1);
+  currentKid=null; saveDB(db); renderKids();
+  showToast(`${name} removed`); nav('s-kids');
+}
+
+// ============================================================
+// AVATAR / COLOR PICKERS
+// ============================================================
+function buildAvGrid(elId, prefix, selected) {
+  document.getElementById(elId).innerHTML = AVATARS.map(a=>
+    `<div class="av-opt ${a===selected?'sel':''}" onclick="selectAv('${prefix}','${a}')">${a}</div>`
+  ).join('');
+}
+function selectAv(prefix, av) {
+  if (prefix==='ak') { akAv=av; buildAvGrid('ak-av-grid','ak',av); document.getElementById('ak-prev-av').textContent=av; }
+  else { ekAv=av; buildAvGrid('ek-av-grid','ek',av); document.getElementById('ek-prev-av').textContent=av; }
+}
+function buildColOpts(elId, prefix, selected) {
+  document.getElementById(elId).innerHTML = COLORS.map(c=>
+    `<div class="col-opt ${c.id===selected?'sel':''}" style="background:linear-gradient(135deg,${c.bg[0]},${c.bg[1]})" onclick="selectCol('${prefix}',${c.id})"></div>`
+  ).join('');
+}
+function selectCol(prefix, id) {
+  if (prefix==='ak') { akCol=id; buildColOpts('ak-col-opts','ak',id); }
+  else { ekCol=id; buildColOpts('ek-col-opts','ek',id); }
+}
+
+// ============================================================
+// QUICK CHIPS
+// ============================================================
+function buildChips() {
+  document.getElementById('earn-chips').innerHTML = EARN_Q.map(s=>
+    `<div class="chip green" onclick="document.getElementById('add-amt').value=${s.amt};document.getElementById('add-lbl').value='${s.label}'">${s.label} <b>+${fmt(s.amt)}</b></div>`
+  ).join('');
+  document.getElementById('spend-chips').innerHTML = SPEND_Q.map(s=>
+    `<div class="chip red" onclick="document.getElementById('spend-amt').value=${s.amt};document.getElementById('spend-lbl').value='${s.label}'">${s.label} <b>${fmt(s.amt)}</b></div>`
   ).join('');
 }
 
-function selectAvatar(prefix, avatar) {
-  if (prefix === 'new') { newAvatarSel = avatar; buildAvatarGrid('new-avatar-grid', 'new', AVATARS, avatar); document.getElementById('new-prev-avatar').textContent = avatar; }
-  else { editAvatarSel = avatar; buildAvatarGrid('edit-avatar-grid', 'edit', AVATARS, avatar); document.getElementById('edit-prev-avatar').textContent = avatar; }
-}
-
-function buildColorOpts(elId, prefix, selected) {
-  document.getElementById(elId).innerHTML = COLORS.map(c =>
-    `<div class="color-opt ${c.id === selected ? 'selected' : ''}" style="background:linear-gradient(135deg,${c.bg[0]},${c.bg[1]})" onclick="selectColor('${prefix}',${c.id})"></div>`
-  ).join('');
-}
-
-function selectColor(prefix, id) {
-  if (prefix === 'new') { newColorSel = id; buildColorOpts('new-color-opts', 'new', id); }
-  else { editColorSel = id; buildColorOpts('edit-color-opts', 'edit', id); }
-}
-
-function createUser() {
-  const name = document.getElementById('new-name').value.trim();
-  if (!name) { toast('Enter a name', true); return; }
-  db.users.push({ name, avatar: newAvatarSel, color: newColorSel, balance: 0, transactions: [] });
-  save(); renderUsers(); goScreen('users');
-  toast(`${name} added! 🎉`);
-}
+// ============================================================
+// HELPERS
+// ============================================================
+function fmt(n) { return '£'+Math.abs(n).toFixed(2); }
+function fmtDate(iso) { return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
 
 // ============================================================
-// EDIT USER
-// ============================================================
-function goEditUser() {
-  openEditUser(currentUser);
-}
-function openEditFromUsers(idx) {
-  currentUser = idx;
-  openEditUser(idx);
-}
-function openEditUser(idx) {
-  const u = db.users[idx];
-  if (!u) return;
-  editAvatarSel = u.avatar || '🐷';
-  editColorSel = u.color ?? 0;
-  document.getElementById('edit-title').textContent = u.name;
-  document.getElementById('edit-name').value = u.name;
-  document.getElementById('edit-prev-name').textContent = u.name;
-  document.getElementById('edit-prev-avatar').textContent = editAvatarSel;
-  document.getElementById('edit-prev-bal').textContent = fmt(u.balance || 0) + ' balance';
-  buildAvatarGrid('edit-avatar-grid', 'edit', AVATARS, editAvatarSel);
-  buildColorOpts('edit-color-opts', 'edit', editColorSel);
-  goScreen('edituser');
-}
-
-function updateEditPreview() {
-  const n = document.getElementById('edit-name').value || 'Name';
-  document.getElementById('edit-prev-name').textContent = n;
-}
-
-function saveEditUser() {
-  const name = document.getElementById('edit-name').value.trim();
-  if (!name) { toast('Enter a name', true); return; }
-  const u = db.users[currentUser];
-  u.name = name; u.avatar = editAvatarSel; u.color = editColorSel;
-  save(); renderUsers(); renderDash();
-  toast('Saved ✓');
-  goScreen('dash');
-}
-
-function deleteUser() {
-  if (!confirm(`Remove ${db.users[currentUser].name}? This deletes all their data.`)) return;
-  db.users.splice(currentUser, 1);
-  currentUser = null;
-  save(); renderUsers(); goScreen('users');
-  toast('Person removed');
-}
-
-// ============================================================
-// KEYBOARD SUBMIT
+// KEYBOARD ENTER
 // ============================================================
 document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  if (currentScreen === 'add') confirmAdd();
-  if (currentScreen === 'spend') confirmSpend();
-  if (currentScreen === 'newuser') createUser();
-  if (currentScreen === 'edituser') saveEditUser();
+  if (e.key!=='Enter') return;
+  if (currentScreen==='s-login') doLogin();
+  else if (currentScreen==='s-register') doRegister();
+  else if (currentScreen==='s-add') confirmAdd();
+  else if (currentScreen==='s-spend') confirmSpend();
+  else if (currentScreen==='s-addkid') createKid();
+  else if (currentScreen==='s-editkid') saveEditKid();
 });
-
-
-
-// ============================================================
-// BOUNCE ANIMATION
-// ============================================================
-const style = document.createElement('style');
-style.textContent = `@keyframes bouncePig { 0%,100%{transform:scale(1) rotate(0deg)} 25%{transform:scale(1.2) rotate(-10deg)} 75%{transform:scale(0.95) rotate(8deg)} }`;
-document.head.appendChild(style);
 
 // ============================================================
 // INIT
 // ============================================================
 buildChips();
-renderUsers();
+// check for existing session
+const savedSession = loadSession();
+if (savedSession) {
+  const db = loadDB();
+  if (db.accounts[savedSession]) {
+    session = savedSession;
+    renderKids();
+    nav('s-kids');
+  }
+}
 </script>
 
 </body>
